@@ -1,0 +1,8 @@
+name: observability
+runtime:
+  name: nodejs
+  options:
+    typescript: false
+description: Observability Starter Kit for JVM appliaction
+backend:
+  url: file://.

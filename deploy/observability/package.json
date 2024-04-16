@@ -1,0 +1,14 @@
+{
+    "name": "observability",
+    "main": "index.js",
+    "version": "",
+    "type": "module",
+    "dependencies": {
+        "@pulumi/pulumi": "^3.0.0",
+        "@pulumi/kubernetes": "^4.0.0"
+    },
+    "engines": {
+        "npm": ">=10.0.0",
+        "node": ">=20.5.0"
+    }
+}
