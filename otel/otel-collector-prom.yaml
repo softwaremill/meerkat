@@ -1,0 +1,6 @@
+apiVersion: opentelemetry.io/v1alpha1
+kind: OpenTelemetryCollector
+metadata:
+  name: otel-collector-prometheus
+spec:
+  config: |
