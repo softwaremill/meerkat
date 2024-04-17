@@ -16,14 +16,14 @@ const createNamespace = (name) => {
 export default async () => {
 
     const observabilityNamespace = createNamespace('observability');
+    const namespace = observabilityNamespace.metadata.name
 
     // TODO: install opentelemtry operator
-
     // TODO: invoke helm chart installation. Change passed values
     let prometheusHelmChart;
 
     if (config.installPrometheus) {
-        prometheusHelmChart = installHelmChart('prometheus', '25.19.1', 'observability', './charts_values/prometheus_values.yaml', 'https://prometheus-community.github.io/helm-charts')
+        prometheusHelmChart = installHelmChart('prometheus', '25.19.1', namespace, './charts_values/prometheus_values.yaml', 'https://prometheus-community.github.io/helm-charts')
     }
     //
     // TODO: further installed chart processing if required
