@@ -17,8 +17,11 @@ export default async () => {
 
     const observabilityNamespace = createNamespace('observability');
     const namespace = observabilityNamespace.metadata.name
-
-    // TODO: install opentelemtry operator
+    
+    if (config.installOpenTelemetryOperator) {
+        installHelmRelease('cert-manager', '1.14.4', namespace, './charts_values/cert_manager_values.yaml', 'https://charts.jetstack.io')
+        installHelmRelease('opentelemetry-operator', '0.55.2', namespace, './charts_values/opentelemetry_operator_values.yaml', 'https://open-telemetry.github.io/opentelemetry-helm-charts')
+    }
     // TODO: invoke helm chart installation. Change passed values
     let prometheusHelmChart;
 

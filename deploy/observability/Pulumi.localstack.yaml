@@ -3,3 +3,4 @@ config:
   installPrometheus: true
   installLoki: true
   installTempo: true
+  installOpenTelemetryOperator: true
