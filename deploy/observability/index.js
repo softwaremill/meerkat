@@ -2,7 +2,7 @@
 import * as pulumi from '@pulumi/pulumi';
 import * as k8s from '@pulumi/kubernetes';
 import * as config from './src/config.js'
-import { installHelmChart } from './src/chart_install.js';
+import { installHelmRelease } from './src/chart_install.js';
 
 
 const createNamespace = (name) => {
@@ -23,7 +23,7 @@ export default async () => {
     let prometheusHelmChart;
 
     if (config.installPrometheus) {
-        prometheusHelmChart = installHelmChart('prometheus', '25.19.1', namespace, './charts_values/prometheus_values.yaml', 'https://prometheus-community.github.io/helm-charts')
+        prometheusHelmChart = installHelmRelease('prometheus', '25.19.1', namespace, './charts_values/prometheus_values.yaml', 'https://prometheus-community.github.io/helm-charts')
     }
     //
     // TODO: further installed chart processing if required
