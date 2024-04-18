@@ -40,25 +40,3 @@ export class HelmRelease extends pulumi.ComponentResource {
         this.registerOutputs();
     }
 }
-
-export const installHelmRelease = (chartName = 'default', chartVersion = 'default', chartNamespace = 'default', chartValuesPath = ' ./default-values.yaml', repoUrl = 'default') => {
-    let values = {};
-
-    try {
-        const loadValues = fs.readFileSync(chartValuesPath, 'utf8');
-        values = yaml.load(loadValues);
-    }
-    catch (e) {
-        console.log("Error reading file:", e);
-    }
-
-    return new k8s.helm.v3.Release(chartName, {
-        chart: chartName,
-        version: chartVersion,
-        namespace: chartNamespace,
-        values: values,
-        repositoryOpts: {
-            repo: repoUrl,
-        },
-    });
-}
