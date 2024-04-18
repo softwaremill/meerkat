@@ -5,7 +5,7 @@ import yaml from 'js-yaml';
 
 // use to install Helm Charts
 // TODO: override default values
-export const installHelmChart = (chartName = 'default', chartVersion = 'default', chartNamespace = 'default', chartValuesPath = ' ./default-values.yaml', repoUrl = 'default') => {
+export const installHelmRelease = (chartName = 'default', chartVersion = 'default', chartNamespace = 'default', chartValuesPath = ' ./default-values.yaml', repoUrl = 'default') => {
 
     let values = {};
 
@@ -17,12 +17,12 @@ export const installHelmChart = (chartName = 'default', chartVersion = 'default'
         console.log("Error reading file:", e);
     }
 
-    return new k8s.helm.v3.Chart(chartName, {
+    return new k8s.helm.v3.Release(chartName, {
         chart: chartName,
         version: chartVersion,
         namespace: chartNamespace,
         values: values,
-        fetchOpts: {
+        repositoryOpts: {
             repo: repoUrl,
         },
     });
