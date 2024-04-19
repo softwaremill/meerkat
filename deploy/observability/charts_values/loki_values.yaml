@@ -3,7 +3,7 @@ minio:
 read:
   replicas: 1
 write:
-  replicas: 1
+  replicas: 2
 backend:
   replicas: 1
 chunksCache:
@@ -13,13 +13,13 @@ loki:
   auth_enabled: false
   storage_config:
     tsdb_shipper:
-      active_index_directory: /loki/index
-      cache_location: /loki/index_cache
+      active_index_directory: /var/loki
+      cache_location: /var/loki
       cache_ttl: 24h
 
   schemaConfig:
     configs:
-      - from: "2020-04-18"
+      - from: "2024-04-18"
         store: tsdb
         object_store: s3
         schema: v13
