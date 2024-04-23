@@ -1,0 +1,21 @@
+tempo:
+  storage:
+    trace:
+      backend: s3
+      s3:
+        bucket: 'tempo-traces'
+        endpoint: 'loki-minio.observability:9000'
+        insecure: true
+  extraEnv:
+  - name: MINIO_ACCESS_KEY_ID
+    valueFrom:
+      secretKeyRef:
+        name: loki-minio
+        key: rootUser
+  - name: MINIO_SECRET_KEY
+    valueFrom:
+      secretKeyRef:
+        name: loki-minio
+        key: rootPassword
+  minio:
+    enabled: false
