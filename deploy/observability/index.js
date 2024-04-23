@@ -25,6 +25,12 @@ export default async () => {
     if (config.installPrometheus) {
         prometheusHelmChart = installHelmRelease('prometheus', '25.19.1', namespace, './charts_values/prometheus_values.yaml', 'https://prometheus-community.github.io/helm-charts')
     }
+
+    let lokiHelmChart;
+
+    if (config.installLoki) {
+        lokiHelmChart = installHelmRelease('loki', '6.2.1', namespace, './charts_values/loki_values.yaml', 'https://grafana.github.io/helm-charts')
+    }
     //
     // TODO: further installed chart processing if required
     // TODO: install loki, tempo,

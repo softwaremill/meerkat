@@ -1,0 +1,28 @@
+minio:
+  enabled: true
+read:
+  replicas: 1
+write:
+  replicas: 2
+backend:
+  replicas: 1
+chunksCache:
+  enabled: false
+
+loki:
+  auth_enabled: false
+  storage_config:
+    tsdb_shipper:
+      active_index_directory: /var/loki
+      cache_location: /var/loki
+      cache_ttl: 24h
+
+  schemaConfig:
+    configs:
+      - from: "2024-04-18"
+        store: tsdb
+        object_store: s3
+        schema: v13
+        index:
+          prefix: index_
+          period: 24h

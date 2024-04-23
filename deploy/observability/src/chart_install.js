@@ -19,6 +19,7 @@ export const installHelmRelease = (chartName = 'default', chartVersion = 'defaul
 
     return new k8s.helm.v3.Release(chartName, {
         chart: chartName,
+        name: chartName,
         version: chartVersion,
         namespace: chartNamespace,
         values: values,
