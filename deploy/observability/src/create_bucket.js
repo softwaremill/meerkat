@@ -10,33 +10,31 @@ export const createBucket = (namespace) => {
         spec: {
             template: {
                 spec: {
-                    containers: [
-                        {
-
-                            env: [
-                                {
-                                    name: 'MINIO_ACCESS_KEY',
-                                    valueFrom: {
-                                        secretKeyRef: {
-                                            name: 'loki-minio',
-                                            key: 'rootUser',
-                                        },
-                                    },
+                    containers: [{
+                        env: [{
+                            name: 'MINIO_ACCESS_KEY',
+                            valueFrom: {
+                                secretKeyRef: {
+                                    name: 'loki-minio',
+                                    key: 'rootUser',
                                 },
-                                {
-                                    name: 'MINIO_SECRET_KEY',
-                                    valueFrom: {
-                                        secretKeyRef: {
-                                            name: 'loki-minio',
-                                            key: 'rootPassword',
-                                        },
-                                    }
-                                }],
-                            name: 'mc',
-                            image: 'minio/mc',
-                            command: ['sh', '-c'],                           
-                            args: ['mc alias set minio http://loki-minio.observability:9000 $MINIO_ACCESS_KEY $MINIO_SECRET_KEY; mc mb minio/tempo-traces; mc anonymous set public minio/tempo-traces']
-                        },],
+                            },
+                        },
+                        {
+                            name: 'MINIO_SECRET_KEY',
+                            valueFrom: {
+                                secretKeyRef: {
+                                    name: 'loki-minio',
+                                    key: 'rootPassword',
+                                },
+                            }
+                        }
+                        ],
+                        name: 'mc',
+                        image: 'minio/mc',
+                        command: ['sh', '-c'],
+                        args: ['mc alias set minio http://loki-minio.observability:9000 $MINIO_ACCESS_KEY $MINIO_SECRET_KEY; mc mb minio/tempo-traces; mc anonymous set public minio/tempo-traces']
+                    },],
                     restartPolicy: 'OnFailure',
                 },
             },
