@@ -45,12 +45,13 @@ export default async () => {
     }
 
     let tempoHelmChart;
+    let bucket;
 
     if (config.installTempo) {
-        createBucket(namespace)
-        tempoHelmChart = installHelmRelease('tempo', '1.7.2', namespace, './charts_values/tempo_values.yaml', 'https://grafana.github.io/helm-charts'), { dependsOn: [lokiHelmChart] }
+        bucket = createBucket(namespace, [lokiHelmChart])
+        tempoHelmChart = installHelmRelease('tempo', '1.7.2', namespace, './charts_values/tempo_values.yaml', 'https://grafana.github.io/helm-charts', [bucket])
     }
-    
+
     //
     // TODO: further installed chart processing if required
 
