@@ -1,6 +1,6 @@
 import * as k8s from '@pulumi/kubernetes';
 
-export const createBucket = (namespace) => {
+export const createBucket = (namespace, dependency) => {
 
     return new k8s.batch.v1.Job("job", {
         metadata: {
@@ -39,5 +39,7 @@ export const createBucket = (namespace) => {
                 },
             },
         },
-    });
+    },
+        { dependsOn: dependency },
+    );
 }

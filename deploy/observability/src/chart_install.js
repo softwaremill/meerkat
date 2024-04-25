@@ -5,7 +5,7 @@ import yaml from 'js-yaml';
 
 // use to install Helm Charts
 // TODO: override default values
-export const installHelmRelease = (chartName = 'default', chartVersion = 'default', chartNamespace = 'default', chartValuesPath = ' ./default-values.yaml', repoUrl = 'default') => {
+export const installHelmRelease = (chartName = 'default', chartVersion = 'default', chartNamespace = 'default', chartValuesPath = ' ./default-values.yaml', repoUrl = 'default', dependency) => {
 
     let values = {};
 
@@ -25,6 +25,8 @@ export const installHelmRelease = (chartName = 'default', chartVersion = 'defaul
         values: values,
         repositoryOpts: {
             repo: repoUrl,
-        },
-    });
+        }
+    },
+        { dependsOn: dependency },
+    );
 }
