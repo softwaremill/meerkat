@@ -52,7 +52,8 @@ jobs:
     - name: Run Pulumi Up
       run: |
         pulumi login --local
-        pulumi up --yes
+        pulumi stack init localstack
+
       working-directory: ./deploy/observability
 
     - name: Destroy Pulumi Resources
