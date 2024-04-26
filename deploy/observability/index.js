@@ -17,6 +17,10 @@ export default async () => {
 
     const observabilityNamespace = createNamespace('observability');
     const namespace = observabilityNamespace.metadata.name
+
+    const certManagerCrds = new k8s.yaml.ConfigFile("cert-manager-crds", {
+        file: "https://github.com/cert-manager/cert-manager/releases/download/v1.14.4/cert-manager.crds.yaml",
+    });
     
     let certManagerHelmChart;
     if (config.installCertManager) {
@@ -40,6 +44,11 @@ export default async () => {
         },
         { dependsOn: [certManagerHelmChart]})
     }
+
+    const otelKustomize = new k8s.kustomize.Directory("otel-kustomize", {
+        directory: "../../",
+    },
+    { dependsOn: [otelOperatorHelmChart]});
 
     // TODO: invoke helm chart installation. Change passed values
     let prometheusHelmChart;
