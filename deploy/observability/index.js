@@ -3,6 +3,7 @@ import * as pulumi from '@pulumi/pulumi';
 import * as k8s from '@pulumi/kubernetes';
 import * as config from './src/config.js'
 import { HelmRelease } from './src/chart_install.js';
+import { MinioBucket } from './src/create_bucket.js';
 
 const createNamespace = (name) => {
     return new k8s.core.v1.Namespace(name, {
@@ -42,9 +43,23 @@ export default async () => {
             chartRepositoryUrl: 'https://grafana.github.io/helm-charts'
         });
     }
+
+    let tempoHelmChart;
+    let bucket;
+
+    if (config.installTempo) {
+        bucket = new MinioBucket('tempo-traces', namespace, { dependsOn: lokiHelmChart })
+        tempoHelmChart = new HelmRelease('tempo', {
+            chartName: 'tempo',
+            chartVersion: '1.7.2',
+            chartNamespace: namespace,
+            chartValuesPath: './charts_values/tempo_values.yaml',
+            chartRepositoryUrl: 'https://grafana.github.io/helm-charts',
+        }, { dependsOn: bucket });
+    }
+
     //
     // TODO: further installed chart processing if required
-    // TODO: install loki, tempo,
 
     // return Pulumi outputs
     return {}
