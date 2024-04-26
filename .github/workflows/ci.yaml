@@ -50,6 +50,8 @@ jobs:
         echo "$HOME/.pulumi/bin" >> $GITHUB_PATH
 
     - name: Run Pulumi Up
+      env:
+        PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
       run: |
         pulumi login --local
         pulumi stack init localstack
