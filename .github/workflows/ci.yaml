@@ -1,0 +1,71 @@
+name: Pulumi CI/CD with KIND
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20.5.0'
+        cache: 'npm'
+    
+    - name: Install Dependencies
+      run: |
+        npm install -g npm@>=10.0.0
+        npm install
+    
+    - name: Install ESLint
+      run: npm install eslint
+
+    - name: Lint JavaScript files
+      run: npx eslint .  # Adjust the path as needed
+
+    - name: Install Docker
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker.io
+
+    - name: Create a KIND Cluster
+      run: |
+        curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64
+        chmod +x ./kind
+        sudo mv ./kind /usr/local/bin/kind
+        kind create cluster
+
+    - name: Install Pulumi
+      run: |
+        curl -fsSL https://get.pulumi.com | sh
+        echo "$HOME/.pulumi/bin" >> $GITHUB_PATH
+
+    - name: Run Pulumi Up
+      run: |
+        pulumi login --local
+        pulumi up --yes
+
+    - name: Destroy Pulumi Resources
+      run: |
+        pulumi destroy --yes
+
+    - name: Destroy the KIND Cluster
+      if: always()
+      run: |
+        kind delete cluster
+
+    - name: Clean up Docker
+      if: always()
+      run: |
+        sudo docker system prune -af
