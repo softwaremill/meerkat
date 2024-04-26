@@ -27,7 +27,7 @@ export default async () => {
             chartVersion: '14.0.0',
             chartNamespace: namespace,
             chartValuesPath: './charts_values/prometheus_values.yaml',
-            repoUrl: 'https://prometheus-community.github.io/helm-charts'
+            chartRepositoryUrl: 'https://prometheus-community.github.io/helm-charts'
         });
     }
 
@@ -39,7 +39,7 @@ export default async () => {
             chartVersion: '6.2.1',
             chartNamespace: namespace,
             chartValuesPath: './charts_values/loki_values.yaml',
-            repoUrl: 'https://grafana.github.io/helm-charts'
+            chartRepositoryUrl: 'https://grafana.github.io/helm-charts'
         });
     }
     //

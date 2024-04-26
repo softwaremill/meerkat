@@ -30,7 +30,7 @@ export class HelmRelease extends pulumi.ComponentResource {
             namespace: helmConfig.chartNamespace,
             values: values,
             repositoryOpts: {
-                repo: helmConfig.repoUrl,
+                repo: helmConfig.chartRepositoryUrl,
             }
         },
             { parent: this },
