@@ -26,7 +26,8 @@ jobs:
       run: |
         npm install -g npm@>=10.0.0
         npm install
-    
+      working-directory: ./deploy/observability
+      
     - name: Install ESLint
       run: npm install eslint
 
