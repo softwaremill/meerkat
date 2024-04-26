@@ -54,7 +54,7 @@ jobs:
         PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
       run: |
         pulumi login --local
-        pulumi stack init localstack
+        pulumi stack init localstack  --force
 
       working-directory: ./deploy/observability
 
