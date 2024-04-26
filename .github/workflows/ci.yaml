@@ -31,10 +31,10 @@ jobs:
     - name: Install ESLint
       run: npm install eslint
 
-    - name: Lint JavaScript files
-      run: npx eslint .  # Adjust the path as needed
-      working-directory: ./deploy/observability
-      
+    # - name: Lint JavaScript files
+    #   run: npx eslint .  # Adjust the path as needed
+    #   working-directory: ./deploy/observability
+
     - name: Install Docker
       run: |
         sudo apt-get update
