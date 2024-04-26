@@ -37,11 +37,6 @@ jobs:
     #   run: npx eslint .  # Adjust the path as needed
     #   working-directory: ./deploy/observability
 
-    # - name: Install Docker
-    #   run: |
-    #     sudo apt-get update
-    #     sudo apt-get install -y docker.io
-
     - name: Create a KIND Cluster
       run: |
         curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64
@@ -58,6 +53,7 @@ jobs:
       run: |
         pulumi login --local
         pulumi up --yes
+      working-directory: ./deploy/observability
 
     - name: Destroy Pulumi Resources
       run: |
@@ -67,8 +63,3 @@ jobs:
       if: always()
       run: |
         kind delete cluster
-
-    # - name: Clean up Docker
-    #   if: always()
-    #   run: |
-    #     sudo docker system prune -af
