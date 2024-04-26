@@ -27,13 +27,14 @@ jobs:
         npm install -g npm@>=10.0.0
         npm install
       working-directory: ./deploy/observability
-      
+
     - name: Install ESLint
       run: npm install eslint
 
     - name: Lint JavaScript files
       run: npx eslint .  # Adjust the path as needed
-
+      working-directory: ./deploy/observability
+      
     - name: Install Docker
       run: |
         sudo apt-get update
