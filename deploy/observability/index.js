@@ -48,8 +48,14 @@ export default async () => {
     let bucket;
 
     if (config.installTempo) {
-        bucket = new MinioBucket('tempo-traces', namespace, {dependsOn: lokiHelmChart})
-        tempoHelmChart = installHelmRelease('tempo', '1.7.2', namespace, './charts_values/tempo_values.yaml', 'https://grafana.github.io/helm-charts', [bucket])
+        bucket = new MinioBucket('tempo-traces', namespace, { dependsOn: lokiHelmChart })
+        tempoHelmChart = new HelmRelease('tempo', {
+            chartName: 'tempo',
+            chartVersion: '1.7.2',
+            chartNamespace: namespace,
+            chartValuesPath: './charts_values/tempo_values.yaml',
+            chartRepositoryUrl: 'https://grafana.github.io/helm-charts',
+        }, { dependsOn: bucket });
     }
 
     //
