@@ -49,12 +49,20 @@ jobs:
         curl -fsSL https://get.pulumi.com | sh
         echo "$HOME/.pulumi/bin" >> $GITHUB_PATH
 
+    - name: Check passphrase set
+      run: |
+        if [ -z "$PULUMI_CONFIG_PASSPHRASE" ]; then
+          echo "Passphrase environment variable is not set."
+        else
+          echo "Passphrase environment variable is set."
+        fi
+      env:
+        PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
+
     - name: Run Pulumi Up
       run: |
         pulumi login --local
         pulumi stack init localstack
-      env:
-        PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
       working-directory: ./deploy/observability
 
     - name: Destroy Pulumi Resources
