@@ -25,12 +25,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    # - name: Create a KIND Cluster
+    #   run: |
+    #     curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64
+    #     chmod +x ./kind
+    #     sudo mv ./kind /usr/local/bin/kind
+    #     kind create cluster
+    
     - name: Create a KIND Cluster
       run: |
-        curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64
-        chmod +x ./kind
-        sudo mv ./kind /usr/local/bin/kind
-        kind create cluster
+        sh ./deploy/kind/cluster_create.sh
 
     - name: Install Pulumi
       run: |
@@ -49,7 +53,12 @@ jobs:
       run: |
         pulumi destroy --yes
 
+    # - name: Destroy the KIND Cluster
+    #   if: always()
+    #   run: |
+    #     kind delete cluster
+
     - name: Destroy the KIND Cluster
       if: always()
       run: |
-        kind delete cluster
+        sh ./deploy/kind/cluster_delete.sh
