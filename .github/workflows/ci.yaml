@@ -31,10 +31,11 @@ jobs:
     #     chmod +x ./kind
     #     sudo mv ./kind /usr/local/bin/kind
     #     kind create cluster
-    
+
     - name: Create a KIND Cluster
       run: |
-        sh ./deploy/kind/cluster_create.sh
+        ./deploy/kind/cluster_create.sh
+      shell: bash
 
     - name: Install Pulumi
       run: |
@@ -61,4 +62,5 @@ jobs:
     - name: Destroy the KIND Cluster
       if: always()
       run: |
-        sh ./deploy/kind/cluster_delete.sh
+        ./deploy/kind/cluster_delete.sh
+      shell: bash
