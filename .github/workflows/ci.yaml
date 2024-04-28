@@ -34,8 +34,9 @@ jobs:
 
     - name: Create a KIND Cluster
       run: |
-        ./deploy/kind/cluster_create.sh
+        ./cluster_create.sh
       shell: bash
+      working-directory: ./deploy/kind
 
     - name: Install Pulumi
       run: |
@@ -62,5 +63,6 @@ jobs:
     - name: Destroy the KIND Cluster
       if: always()
       run: |
-        ./deploy/kind/cluster_delete.sh
+        ./cluster_delete.sh
       shell: bash
+      working-directory: ./deploy/kind
