@@ -1,0 +1,56 @@
+name: Pulumi CI/CD with KIND
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - main
+    # paths-ignore:
+    #   - ".github/workflows/ci.yaml"
+
+  pull_request:
+    branches:
+      - main
+    # paths-ignore:
+    #   - ".github/workflows/ci.yaml"
+
+permissions: write-all
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create a KIND Cluster
+        run: |
+          ./cluster_create.sh
+        shell: bash
+        working-directory: ./deploy/kind
+
+      - name: Install Pulumi
+        run: |
+          curl -fsSL https://get.pulumi.com | sh
+          echo "$HOME/.pulumi/bin" >> $GITHUB_PATH
+
+      - name: Run Pulumi Up
+        run: |
+          pulumi login --local
+          pulumi stack init localstack
+        env:
+          PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
+        working-directory: ./deploy/observability
+
+      - name: Destroy Pulumi Resources
+        run: |
+          pulumi destroy --yes
+
+      - name: Destroy the KIND Cluster
+        if: always()
+        run: |
+          ./cluster_delete.sh
+        shell: bash
+        working-directory: ./deploy/kind
