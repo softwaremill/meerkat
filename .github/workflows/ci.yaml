@@ -40,6 +40,7 @@ jobs:
         run: |
           pulumi login --local
           pulumi stack init localstack
+          pulumi up --yes
         env:
           PULUMI_CONFIG_PASSPHRASE: ""
         working-directory: ./deploy/observability
