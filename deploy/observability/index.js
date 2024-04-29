@@ -1,5 +1,4 @@
 'use strict';
-import * as pulumi from '@pulumi/pulumi';
 import * as k8s from '@pulumi/kubernetes';
 import * as config from './src/config.js'
 import { HelmRelease } from './src/chart_install.js';
@@ -29,7 +28,8 @@ export default async () => {
             chartNamespace: namespace,
             chartValuesPath: './charts_values/cert_manager_values.yaml',
             chartRepositoryUrl: 'https://charts.jetstack.io'
-        })
+        },
+        { dependsOn: [certManagerCrds]})
     }
 
     let otelOperatorHelmChart;
@@ -44,16 +44,13 @@ export default async () => {
         { dependsOn: [certManagerHelmChart]})
     }
 
-    const otelKustomize = new k8s.kustomize.Directory("otel-kustomize", {
+    new k8s.kustomize.Directory("otel-kustomize", {
         directory: "../../",
     },
     { dependsOn: [otelOperatorHelmChart]});
 
-    // TODO: invoke helm chart installation. Change passed values
-    let prometheusHelmChart;
-
     if (config.installPrometheus) {
-        prometheusHelmChart = new HelmRelease('prometheus', {
+        new HelmRelease('prometheus', {
             chartName: 'prometheus',
             chartVersion: '14.0.0',
             chartNamespace: namespace,
@@ -62,10 +59,8 @@ export default async () => {
         });
     }
 
-    let lokiHelmChart;
-
     if (config.installLoki) {
-        lokiHelmChart = new HelmRelease('loki', {
+        new HelmRelease('loki', {
             chartName: 'loki',
             chartVersion: '6.2.1',
             chartNamespace: namespace,
