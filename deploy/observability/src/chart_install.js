@@ -1,6 +1,5 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
-import { FileAsset } from "@pulumi/pulumi/asset/index.js";
 
 export class HelmRelease extends pulumi.ComponentResource {
 
@@ -12,7 +11,7 @@ export class HelmRelease extends pulumi.ComponentResource {
             name: helmConfig.chartName,
             version: helmConfig.chartVersion,
             namespace: helmConfig.chartNamespace,
-            valueYamlFiles: [new FileAsset(helmConfig.chartValuesPath)],
+            valueYamlFiles: [new pulumi.asset.FileAsset(helmConfig.valuesFile)],
             repositoryOpts: {
                 repo: helmConfig.chartRepositoryUrl,
             }
