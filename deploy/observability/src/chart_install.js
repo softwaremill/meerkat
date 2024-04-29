@@ -11,7 +11,7 @@ export class HelmRelease extends pulumi.ComponentResource {
             name: helmConfig.chartName,
             version: helmConfig.chartVersion,
             namespace: helmConfig.chartNamespace,
-            valueYamlFiles: [new pulumi.asset.FileAsset(helmConfig.valuesFile)],
+            valueYamlFiles: [new pulumi.asset.FileAsset(helmConfig.chartValuesPath)],
             repositoryOpts: {
                 repo: helmConfig.chartRepositoryUrl,
             }
