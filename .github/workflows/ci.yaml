@@ -34,8 +34,15 @@ jobs:
         run: |
           npm install -g npm@latest
           npm install
-        working-directory: ./deploy/observability 
+        working-directory: ./deploy/observability
 
+      - name: Install ESLint
+        run: npm install eslint
+
+      - name: Lint JavaScript files
+        run: npx eslint .  # Adjust the path as needed
+        working-directory: ./deploy/observability
+        
       - name: Create a KIND Cluster
         run: |
           ./cluster_create.sh
