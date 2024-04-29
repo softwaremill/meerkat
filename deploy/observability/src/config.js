@@ -6,5 +6,7 @@ const observabilityConfig = new pulumi.Config();
 const installPrometheus = observabilityConfig.requireBoolean('installPrometheus');
 const installLoki = observabilityConfig.requireBoolean('installLoki');
 const installTempo = observabilityConfig.requireBoolean('installTempo');
+const installCertManager = observabilityConfig.requireBoolean('installCertManager');
+const installOpenTelemetryOperator = observabilityConfig.requireBoolean('installOpenTelemetryOperator');
 
-export {installPrometheus, installLoki, installTempo}
+export { installPrometheus, installLoki, installTempo, installCertManager, installOpenTelemetryOperator }

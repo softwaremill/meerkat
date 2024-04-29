@@ -6,7 +6,7 @@ export class MinioBucket extends pulumi.ComponentResource {
     constructor(bucketName, namespace, opts) {
         super("meerkat:MinioBucket", bucketName, namespace, opts);
 
-        let bucket = new k8s.batch.v1.Job("job", {
+        new k8s.batch.v1.Job("job", {
             metadata: {
                 name: 'create-bucket',
                 namespace: namespace,

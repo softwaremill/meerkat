@@ -3,3 +3,5 @@ config:
   installPrometheus: true
   installLoki: true
   installTempo: true
+  installCertManager: true
+  installOpenTelemetryOperator: true

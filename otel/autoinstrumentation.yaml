@@ -4,7 +4,7 @@ metadata:
   name: autoinstrumentation
 spec:
   exporter:
-    endpoint: http://java-collector:4318
+    endpoint: http://jvm-metrics-collector-collector.observability.svc.cluster.local:4317
   propagators:
     - tracecontext
     - baggage

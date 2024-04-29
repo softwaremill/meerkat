@@ -1,5 +1,4 @@
 'use strict';
-import * as pulumi from '@pulumi/pulumi';
 import * as k8s from '@pulumi/kubernetes';
 import * as config from './src/config.js'
 import { HelmRelease } from './src/chart_install.js';
@@ -17,13 +16,41 @@ export default async () => {
 
     const observabilityNamespace = createNamespace('observability');
     const namespace = observabilityNamespace.metadata.name
+    
+    let certManagerHelmChart;
+    if (config.installCertManager) {
+        const certManagerCrds = new k8s.yaml.ConfigFile("cert-manager-crds", {
+            file: "https://github.com/cert-manager/cert-manager/releases/download/v1.14.4/cert-manager.crds.yaml",
+        });
+        certManagerHelmChart = new HelmRelease('cert-manager', {
+            chartName: 'cert-manager',
+            chartVersion: '1.14.4',
+            chartNamespace: namespace,
+            chartValuesPath: './charts_values/cert_manager_values.yaml',
+            chartRepositoryUrl: 'https://charts.jetstack.io'
+        },
+        { dependsOn: [certManagerCrds]})
+    }
 
-    // TODO: install opentelemtry operator
-    // TODO: invoke helm chart installation. Change passed values
-    let prometheusHelmChart;
+    let otelOperatorHelmChart;
+    if (config.installOpenTelemetryOperator) {
+        otelOperatorHelmChart = new HelmRelease('opentelemetry-operator', {
+            chartName: 'opentelemetry-operator',
+            chartVersion: '0.55.2',
+            chartNamespace: namespace,
+            chartValuesPath: './charts_values/opentelemetry_operator_values.yaml',
+            chartRepositoryUrl: 'https://open-telemetry.github.io/opentelemetry-helm-charts'
+        },
+        { dependsOn: [certManagerHelmChart]})
+    }
+
+    new k8s.kustomize.Directory("otel-kustomize", {
+        directory: "../../",
+    },
+    { dependsOn: [otelOperatorHelmChart]});
 
     if (config.installPrometheus) {
-        prometheusHelmChart = new HelmRelease('prometheus', {
+        new HelmRelease('prometheus', {
             chartName: 'prometheus',
             chartVersion: '14.0.0',
             chartNamespace: namespace,
@@ -33,7 +60,7 @@ export default async () => {
     }
 
     let lokiHelmChart;
-
+    
     if (config.installLoki) {
         lokiHelmChart = new HelmRelease('loki', {
             chartName: 'loki',
@@ -44,12 +71,9 @@ export default async () => {
         });
     }
 
-    let tempoHelmChart;
-    let bucket;
-
     if (config.installTempo) {
-        bucket = new MinioBucket('tempo-traces', namespace, { dependsOn: lokiHelmChart })
-        tempoHelmChart = new HelmRelease('tempo', {
+        let bucket = new MinioBucket('tempo-traces', namespace, { dependsOn: lokiHelmChart })
+        new HelmRelease('tempo', {
             chartName: 'tempo',
             chartVersion: '1.7.2',
             chartNamespace: namespace,
