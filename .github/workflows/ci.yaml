@@ -41,7 +41,7 @@ jobs:
           pulumi login --local
           pulumi stack init localstack
         env:
-          PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
+          PULUMI_CONFIG_PASSPHRASE: ""
         working-directory: ./deploy/observability
 
       - name: Destroy Pulumi Resources
