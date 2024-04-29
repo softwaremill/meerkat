@@ -8,12 +8,14 @@ on:
       - main
     # paths-ignore:
     #   - ".github/workflows/ci.yaml"
+    #   - ".github/CODEOWNERS"
 
   pull_request:
     branches:
       - main
     # paths-ignore:
     #   - ".github/workflows/ci.yaml"
+    #   - ".github/CODEOWNERS"
 
 permissions: write-all
 
@@ -42,7 +44,7 @@ jobs:
       - name: Lint JavaScript files
         run: npx eslint .  # Adjust the path as needed
         working-directory: ./deploy/observability
-        
+
       - name: Create a KIND Cluster
         run: |
           ./cluster_create.sh
