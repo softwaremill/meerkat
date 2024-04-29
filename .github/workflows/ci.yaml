@@ -59,6 +59,8 @@ jobs:
       - name: Destroy Pulumi Resources
         run: |
           pulumi destroy --yes
+        env:
+          PULUMI_CONFIG_PASSPHRASE: ""
         working-directory: ./deploy/observability
 
       - name: Destroy the KIND Cluster
