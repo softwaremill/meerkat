@@ -25,6 +25,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.5' # Specify your Node.js version here
+      
+      - name: Install Dependencies
+        run: |
+          npm install -g npm@latest
+          npm install
+        working-directory: ./deploy/observability 
+
       - name: Create a KIND Cluster
         run: |
           ./cluster_create.sh
