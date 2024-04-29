@@ -17,13 +17,12 @@ export default async () => {
 
     const observabilityNamespace = createNamespace('observability');
     const namespace = observabilityNamespace.metadata.name
-
-    const certManagerCrds = new k8s.yaml.ConfigFile("cert-manager-crds", {
-        file: "https://github.com/cert-manager/cert-manager/releases/download/v1.14.4/cert-manager.crds.yaml",
-    });
     
     let certManagerHelmChart;
     if (config.installCertManager) {
+        const certManagerCrds = new k8s.yaml.ConfigFile("cert-manager-crds", {
+            file: "https://github.com/cert-manager/cert-manager/releases/download/v1.14.4/cert-manager.crds.yaml",
+        });
         certManagerHelmChart = new HelmRelease('cert-manager', {
             chartName: 'cert-manager',
             chartVersion: '1.14.4',
