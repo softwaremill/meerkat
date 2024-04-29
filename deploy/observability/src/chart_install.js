@@ -1,6 +1,6 @@
-import * as pulumi from '@pulumi/pulumi';
-import * as k8s from '@pulumi/kubernetes';
-import { FileAsset } from '@pulumi/pulumi/asset/index.js';
+import * as pulumi from "@pulumi/pulumi";
+import * as k8s from "@pulumi/kubernetes";
+import { FileAsset } from "@pulumi/pulumi/asset/index.js";
 
 export class HelmRelease extends pulumi.ComponentResource {
 
