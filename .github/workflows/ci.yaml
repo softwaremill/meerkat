@@ -59,6 +59,7 @@ jobs:
       - name: Destroy Pulumi Resources
         run: |
           pulumi destroy --yes
+        working-directory: ./deploy/observability
 
       - name: Destroy the KIND Cluster
         if: always()
