@@ -59,8 +59,10 @@ export default async () => {
         });
     }
 
+    let lokiHelmChart;
+    
     if (config.installLoki) {
-        new HelmRelease('loki', {
+        lokiHelmChart = new HelmRelease('loki', {
             chartName: 'loki',
             chartVersion: '6.2.1',
             chartNamespace: namespace,
@@ -69,12 +71,9 @@ export default async () => {
         });
     }
 
-    let tempoHelmChart;
-    let bucket;
-
     if (config.installTempo) {
-        bucket = new MinioBucket('tempo-traces', namespace, { dependsOn: lokiHelmChart })
-        tempoHelmChart = new HelmRelease('tempo', {
+        let bucket = new MinioBucket('tempo-traces', namespace, { dependsOn: lokiHelmChart })
+        new HelmRelease('tempo', {
             chartName: 'tempo',
             chartVersion: '1.7.2',
             chartNamespace: namespace,
