@@ -24,7 +24,7 @@ spec:
 
     exporters:
       prometheus:
-        endpoint: 0.0.0.0:8889
+        endpoint: prometheus-pushgateway.observability.svc.cluster.local:9091
       loki:
         endpoint: "http://loki.observability:3100/loki/api/v1/push"
 
