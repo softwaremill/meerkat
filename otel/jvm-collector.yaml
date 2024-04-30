@@ -30,14 +30,8 @@ spec:
     exporters:
       loki:
         endpoint: "http://loki-gateway.observability/loki/api/v1/push"
-      prometheusremotewrite:
-        endpoint: prometheus-pushgateway.observability.svc.cluster.local:9091/api/v1/write
-        remote_write_queue:
-          enabled: true
-        resource_to_telemetry_conversion:
-          enabled: true
-        target_info:
-          enabled: false
+      otlphttp/metrics:
+        endpoint: http://prometheus-server.observability.svc.cluster.local:80/api/v1/otlp/
         tls:
           insecure: true
 
@@ -50,4 +44,4 @@ spec:
         metrics:
           receivers: [otlp]
           processors: [memory_limiter, batch]
-          exporters: [prometheusremotewrite]
+          exporters: [otlphttp/metrics]

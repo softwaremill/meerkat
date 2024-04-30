@@ -1,0 +1,3 @@
+server:
+  extraFlags:
+    - enable-feature=otlp-write-receiver
