@@ -1,7 +1,7 @@
 apiVersion: opentelemetry.io/v1alpha1
 kind: OpenTelemetryCollector
 metadata:
-  name: jvm-metrics-collector
+  name: jvm-collector
   namespace: observability
 spec:
   config: |
@@ -24,7 +24,9 @@ spec:
 
     exporters:
       prometheus:
-        endpoint: prometheus-pushgateway.observability.svc.cluster.local:9091
+        endpoint: 0.0.0.0:8889
+      loki:
+        endpoint: "http://loki.observability:3100/loki/api/v1/push"
 
     service:
       pipelines:
@@ -32,3 +34,7 @@ spec:
           receivers: [otlp]
           processors: [memory_limiter, batch]
           exporters: [prometheus]
+        logs:
+          receivers: [otlp]
+          processors: [memory_limiter, batch]
+          exporters: [loki]
