@@ -30,7 +30,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.5' # Specify your Node.js version here
+          node-version: '20.5'
       
       - name: Install Dependencies
         run: |
@@ -42,7 +42,7 @@ jobs:
         run: npm install eslint
 
       - name: Lint JavaScript files
-        run: npx eslint . # Adjust the path as needed
+        run: npx eslint .
         working-directory: ./deploy/observability
 
       - name: Create a KIND Cluster
