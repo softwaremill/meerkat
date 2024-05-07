@@ -4,10 +4,14 @@ metadata:
   name: autoinstrumentation
 spec:
   exporter:
-    endpoint: http://jvm-metrics-collector-collector.observability.svc.cluster.local:4317
+    endpoint: http://jvm-otel-collector.observability.svc.cluster.local:4317
   propagators:
     - tracecontext
     - baggage
   sampler:
     type: parentbased_traceidratio
     argument: "1"
+  java:
+    env:
+      - name: OTEL_LOGS_EXPORTER
+        value: otlp
