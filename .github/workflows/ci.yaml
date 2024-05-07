@@ -1,0 +1,80 @@
+name: Pulumi CI/CD with KIND
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - ".github/workflows/ci.yaml"
+      - ".github/CODEOWNERS"
+
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - ".github/workflows/ci.yaml"
+      - ".github/CODEOWNERS"
+
+permissions: write-all
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.5'
+      
+      - name: Install Dependencies
+        run: |
+          npm install -g npm@latest
+          npm install
+        working-directory: ./deploy/observability
+
+      - name: Install ESLint
+        run: npm install eslint
+
+      - name: Lint JavaScript files
+        run: npx eslint .
+        working-directory: ./deploy/observability
+
+      - name: Create a KIND Cluster
+        run: |
+          ./cluster_create.sh
+        shell: bash
+        working-directory: ./deploy/kind
+
+      - name: Install Pulumi
+        run: |
+          curl -fsSL https://get.pulumi.com | sh
+          echo "$HOME/.pulumi/bin" >> $GITHUB_PATH
+
+      - name: Run Pulumi Up
+        run: |
+          pulumi login --local
+          pulumi stack init localstack
+          pulumi up --yes
+        env:
+          PULUMI_CONFIG_PASSPHRASE: ""
+        working-directory: ./deploy/observability
+
+      - name: Destroy Pulumi Resources
+        run: |
+          pulumi destroy --yes
+        env:
+          PULUMI_CONFIG_PASSPHRASE: ""
+        working-directory: ./deploy/observability
+
+      - name: Destroy the KIND Cluster
+        if: always()
+        run: |
+          ./cluster_delete.sh
+        shell: bash
+        working-directory: ./deploy/kind
