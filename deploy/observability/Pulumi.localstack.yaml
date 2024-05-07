@@ -5,3 +5,4 @@ config:
   installTempo: true
   installCertManager: true
   installOpenTelemetryOperator: true
+  installGrafana: true

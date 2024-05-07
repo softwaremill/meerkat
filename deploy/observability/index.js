@@ -16,7 +16,7 @@ export default async () => {
 
     const observabilityNamespace = createNamespace('observability');
     const namespace = observabilityNamespace.metadata.name
-    
+
     let certManagerHelmChart;
     if (config.installCertManager) {
         const certManagerCrds = new k8s.yaml.ConfigFile("cert-manager-crds", {
@@ -29,7 +29,7 @@ export default async () => {
             chartValuesPath: './charts_values/cert_manager_values.yaml',
             chartRepositoryUrl: 'https://charts.jetstack.io'
         },
-        { dependsOn: [certManagerCrds]})
+            { dependsOn: [certManagerCrds] })
     }
 
     let otelOperatorHelmChart;
@@ -41,13 +41,13 @@ export default async () => {
             chartValuesPath: './charts_values/opentelemetry_operator_values.yaml',
             chartRepositoryUrl: 'https://open-telemetry.github.io/opentelemetry-helm-charts'
         },
-        { dependsOn: [certManagerHelmChart]})
+            { dependsOn: [certManagerHelmChart] })
     }
 
     new k8s.kustomize.Directory("otel-kustomize", {
         directory: "../../",
     },
-    { dependsOn: [otelOperatorHelmChart]});
+        { dependsOn: [otelOperatorHelmChart] });
 
     if (config.installPrometheus) {
         new HelmRelease('prometheus', {
@@ -60,7 +60,7 @@ export default async () => {
     }
 
     let lokiHelmChart;
-    
+
     if (config.installLoki) {
         lokiHelmChart = new HelmRelease('loki', {
             chartName: 'loki',
@@ -80,6 +80,16 @@ export default async () => {
             chartValuesPath: './charts_values/tempo_values.yaml',
             chartRepositoryUrl: 'https://grafana.github.io/helm-charts',
         }, { dependsOn: bucket });
+    }
+
+    if (config.installGrafana) {
+        new HelmRelease("grafana", {
+            chartName: "grafana",
+            chartVersion: "7.3.9",
+            chartNamespace: namespace,
+            chartValuesPath: "./charts_values/grafana_values.yaml",
+            chartRepositoryUrl: "https://grafana.github.io/helm-charts"
+        });
     }
 
     //
