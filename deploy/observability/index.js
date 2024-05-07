@@ -52,7 +52,7 @@ export default async () => {
     if (config.installPrometheus) {
         new HelmRelease('prometheus', {
             chartName: 'prometheus',
-            chartVersion: '14.0.0',
+            chartVersion: '25.20.1',
             chartNamespace: namespace,
             chartValuesPath: './charts_values/prometheus_values.yaml',
             chartRepositoryUrl: 'https://prometheus-community.github.io/helm-charts'
