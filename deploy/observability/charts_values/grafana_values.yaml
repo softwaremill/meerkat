@@ -1,0 +1,21 @@
+sidecar:
+  datasources:
+    enabled: true
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+    - name: Loki
+      type: loki
+      access: proxy
+      url: "http://loki-gateway"
+      version: 1
+      uid: loki
+    - name: Tempo
+      type: tempo
+      url: "http://tempo:3100"
+      access: proxy
+      basicAuth: false
+      jsonData:
+        tracesToLogsV2:
+          datasourceUid: "loki"
