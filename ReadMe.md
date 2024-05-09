@@ -3,7 +3,7 @@ Observability Starter Kit for JVM Applications
 
 ## Introduction
 
-This project, initiated within the DevOps inter-project space at SoftwareMill, aims to provide a ready-to-deploy configuration based 
+This project, initiated within the DevOps OSS space at SoftwareMill, aims to provide a ready-to-deploy configuration based 
 on OpenTelemetry for JVM applications. By providing a ready-to-deploy solution, we want to accelerate adding industry-standard observability practices into JVM applications.
 The Observability Starter Kit is designed to be easily implemented and extended to meet specific observability needs.
 
