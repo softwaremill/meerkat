@@ -1,8 +1,7 @@
 apiVersion: opentelemetry.io/v1alpha1
 kind: Instrumentation
 metadata:
-  name: autoinstrumentation
-  namespace: observability
+  name: jvm-autoinstrumentation
 spec:
   exporter:
     endpoint: http://jvm-otel-collector.observability.svc.cluster.local:4317

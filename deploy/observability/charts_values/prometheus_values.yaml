@@ -1,3 +1,7 @@
 server:
   extraFlags:
     - enable-feature=otlp-write-receiver
+
+serverFiles:
+  "prometheus.yml":
+    scrape_configs: []

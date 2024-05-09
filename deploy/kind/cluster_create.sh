@@ -4,7 +4,7 @@ export SHELLOPTS
 
 IFS=$'\t\n'
 
-KIND_CONFIG_FILE='./kind-config.yml'
+KIND_CONFIG_FILE="$(dirname "$0")/kind-config.yml"
 CLUSTER_NAME=observability-localstack
 
 printf "#: Checking if all Kubernetes dependencies are installed...\n"

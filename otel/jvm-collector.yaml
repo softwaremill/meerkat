@@ -1,11 +1,51 @@
 apiVersion: opentelemetry.io/v1alpha1
 kind: OpenTelemetryCollector
 metadata:
-  name: jvm-otel
-  namespace: observability
+  name: jvm-otel-collector
 spec:
+  mode: statefulset
+  # https://opentelemetry.io/docs/kubernetes/operator/target-allocator/
+  targetAllocator:
+    enabled: true
+    serviceAccount: jvm-otel-collector-targetallocator
+    # Discover CR used by prometheus operator
+    prometheusCR:
+      enabled: true
   config: |
     receivers:
+      prometheus:
+        config:
+          scrape_configs:
+          - job_name: 'kubernetes-pods'
+            kubernetes_sd_configs:
+              - role: pod
+            relabel_configs:
+              - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+                action: keep
+                regex: true
+              - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+                action: replace
+                target_label: __metrics_path__
+                regex: (.+)
+              - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+                action: replace
+                regex: ([^:]+)(?::\d+)?;(\d+)
+                replacement: $1:$2
+                target_label: __address__
+              - action: labelmap
+                regex: __meta_kubernetes_pod_label_(.+)
+              - source_labels: [__meta_kubernetes_namespace]
+                action: replace
+                target_label: namespace
+              - source_labels: [__meta_kubernetes_pod_name]
+                action: replace
+                target_label: pod
+              - source_labels:
+                  - __meta_kubernetes_namespace
+                  - __meta_kubernetes_pod_name
+                target_label: job
+                regex: (.+);(.+)
+                replacement: ${1}/${2}
       otlp:
         protocols:
           grpc:
@@ -31,7 +71,7 @@ spec:
       loki:
         endpoint: "http://loki-gateway.observability/loki/api/v1/push"
       otlphttp/metrics:
-        endpoint: http://prometheus-server.observability.svc.cluster.local:80/api/v1/otlp/
+        endpoint: "http://prometheus-server.observability/api/v1/otlp/" 
         tls:
           insecure: true
 
