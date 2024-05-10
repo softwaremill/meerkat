@@ -1,7 +1,7 @@
 apiVersion: opentelemetry.io/v1alpha1
 kind: OpenTelemetryCollector
 metadata:
-  name: jvm-otel-collector
+  name: jvm-otel
 spec:
   replicas: 2
   mode: statefulset
