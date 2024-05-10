@@ -16,6 +16,7 @@ spec:
 
   config: |
     service:
+      extensions: [health_check, pprof, zpages]
       pipelines:
         logs:
           receivers: [otlp]
@@ -26,6 +27,12 @@ spec:
           processors: [memory_limiter, batch]
           exporters: [otlphttp/metrics]
 
+    extensions:
+      zpages:
+        endpoint: :55679
+      pprof:
+      health_check:
+    
     exporters: 
       loki:
         endpoint: "http://loki-gateway.observability/loki/api/v1/push"
