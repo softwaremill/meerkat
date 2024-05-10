@@ -36,20 +36,20 @@ jobs:
         run: |
           npm install -g npm@latest
           npm install
-        working-directory: ./deploy/observability
+        working-directory: ./try-me/observability
 
       - name: Install ESLint
         run: npm install eslint
 
       - name: Lint JavaScript files
         run: npx eslint .
-        working-directory: ./deploy/observability
+        working-directory: ./try-me/observability
 
       - name: Create a KIND Cluster
         run: |
           ./cluster_create.sh
         shell: bash
-        working-directory: ./deploy/kind
+        working-directory: ./try-me/kind
 
       - name: Install Pulumi
         run: |
@@ -63,18 +63,18 @@ jobs:
           pulumi up --yes
         env:
           PULUMI_CONFIG_PASSPHRASE: ""
-        working-directory: ./deploy/observability
+        working-directory: ./try-me/observability
 
       - name: Destroy Pulumi Resources
         run: |
           pulumi destroy --yes
         env:
           PULUMI_CONFIG_PASSPHRASE: ""
-        working-directory: ./deploy/observability
+        working-directory: ./try-me/observability
 
       - name: Destroy the KIND Cluster
         if: always()
         run: |
           ./cluster_delete.sh
         shell: bash
-        working-directory: ./deploy/kind
+        working-directory: ./try-me/kind
