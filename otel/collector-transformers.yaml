@@ -1,0 +1,6 @@
+nameReference:
+  - kind: ConfigMap
+    fieldSpecs:
+      - kind: OpenTelemetryCollector
+        version: v1alpha1
+        path: spec/configmaps/name
