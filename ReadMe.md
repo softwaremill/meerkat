@@ -36,3 +36,7 @@ OpenTelemetry facilitates the collection and processing of telemetry data (logs,
 - YAML manifests for deployment in Kubernetes environments.
 - Localhost try-me environment.
 - A step-by-step guide to deploying and extending the configuration.
+
+## Copyright
+
+Copyright (C) 2024 SoftwareMill [https://softwaremill.com](https://softwaremill.com).
