@@ -24,7 +24,7 @@ export default async () => {
         });
         certManagerHelmChart = new HelmRelease('cert-manager', {
             chartName: 'cert-manager',
-            chartVersion: '1.14.4',
+            chartVersion: '1.14.5',
             chartNamespace: namespace,
             chartValuesPath: './charts_values/cert_manager_values.yaml',
             chartRepositoryUrl: 'https://charts.jetstack.io'
@@ -36,7 +36,7 @@ export default async () => {
     if (config.installOpenTelemetryOperator) {
         otelOperatorHelmChart = new HelmRelease('opentelemetry-operator', {
             chartName: 'opentelemetry-operator',
-            chartVersion: '0.55.2',
+            chartVersion: '0.56.1',
             chartNamespace: namespace,
             chartValuesPath: './charts_values/opentelemetry_operator_values.yaml',
             chartRepositoryUrl: 'https://open-telemetry.github.io/opentelemetry-helm-charts'

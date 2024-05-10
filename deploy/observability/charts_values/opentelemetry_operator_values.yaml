@@ -1,3 +1,7 @@
 admissionWebhooks:
   certManager:
     enabled: true
+manager:
+  collectorImage:
+    repository: "otel/opentelemetry-collector-contrib"
+    tag: "0.100.0" # helm chart uses 0.98.0 and adding new OpenInstrumentationCollector v1beta1 - not available as Helm Chart
