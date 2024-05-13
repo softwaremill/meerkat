@@ -29,6 +29,11 @@ OpenTelemetry facilitates the collection and processing of telemetry data (logs,
 
 **We focus on OpenTelemetry because it standardizes software telemetry data. OpenTelemetry offers universal way to collect, process and send telemetry data to multiple vendors.**
 
+## Getting started
+
+- [Components Overview](docs/Components.md)
+- [Try me environment](docs/TryMe.md)
+
 ## What will be included?
 
 - Configuration files for OpenTelemetry Collector to be used together with OpenTelemetry Operator.
