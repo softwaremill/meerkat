@@ -12,7 +12,7 @@ making testing and development purposes of observability - friendly.
 
 ## Running
 
-### 1. [Kind - Kubernetes in Dokcer](../try-me/kind)
+### 1. [Kind - Kubernetes in Docker](../try-me/kind)
 
 First you need to run Kubernetes cluster on your localhost. For that we're running Kind cluster
 
@@ -40,7 +40,7 @@ popd
 to tear it down.
 
 
-### [Observability](../try-me/observability)
+### 2. [Observability](../try-me/observability)
 
 This folder contains Pulumi code to deploy Observability Components into the Kind cluster. 
 Components are deployed as Helm Chart managed by Pulumi. Deploying requires couple steps.
@@ -48,27 +48,27 @@ Components are deployed as Helm Chart managed by Pulumi. Deploying requires coup
 
 Inside observability folder.
 
-1. Install libraries. Try-me environment has been prepared using Javascript Pulumi SDK. For those
+1. Install libraries. Try-me environment has been prepared using Javascript Pulumi SDK. For those:
 ```bash
 
 pushd ../try-me/observability
 npm install
 ```
 
-2. Initialize new Pulumi stack
+2. Initialize new Pulumi stack:
 ```bash
 pulumi stack init localstack --no-select
 ```
-3. Deploy necessary components
+3. Deploy necessary components:
 ```bash
 pulumi up localstack
 ```
 
-4. Until now all observability infrastructure are running. We need to auto-instrument the Java application
+4. Until now all observability infrastructure are running. We need to auto-instrument the Java application:
 ```bash
 kubectl patch deployment <your_deployment_name> -n <your_deployment_namespace> -p '{"spec": {"template":{"metadata":{"annotations":{"instrumentation.opentelemetry.io/inject-java":"observability/autoinstrumentation"}}}} }'
 ```
-5. Get access to Grafana, to get metrics, logs, traces visualized 
+5. Get access to Grafana, to get metrics, logs, traces visualized:
 ```bash
 kubectl get secret --namespace observability grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo # To retrieve Grafana admin password
 ```
