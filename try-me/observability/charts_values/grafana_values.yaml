@@ -19,8 +19,7 @@ datasources:
       jsonData:
         tracesToLogsV2:
           datasourceUid: "loki"
-    - name: Prometheus
+    - name: Mimir
       type: prometheus
-      access: proxy
-      url: "http://prometheus-server"
-      uid: prometheus
+      url: "http://mimir-nginx.observability.svc/prometheus"
+      uid: mimir

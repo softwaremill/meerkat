@@ -92,6 +92,19 @@ export default async () => {
         });
     }
 
+    if (config.installMimir) {
+        let bucket = new MinioBucket('mimir-metrics', namespace, { dependsOn: lokiHelmChart });
+        new MinioBucket('mimir-ruler', namespace, { dependsOn: lokiHelmChart });
+        new MinioBucket('mimir-tsdb', namespace, { dependsOn: lokiHelmChart });
+        new HelmRelease("mimir", {
+            chartName: "mimir-distributed",
+            chartVersion: "5.3.0",
+            chartNamespace: namespace,
+            chartValuesPath: "./charts_values/mimir_values.yaml",
+            chartRepositoryUrl: "https://grafana.github.io/helm-charts"
+        }, { dependsOn: bucket });
+    }
+
     //
     // TODO: further installed chart processing if required
 

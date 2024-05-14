@@ -1,8 +1,9 @@
 encryptionsalt: v1:zn4n5Gqgry0=:v1:7naizlfJbx9AzrzY:6BirbokgGnWTJa7OJpnfZIha/rxprA==
 config:
-  installPrometheus: true
+  installPrometheus: false
   installLoki: true
-  installTempo: true
+  installTempo: false
   installCertManager: true
   installOpenTelemetryOperator: true
   installGrafana: true
+  installMimir: true

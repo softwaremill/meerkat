@@ -9,5 +9,6 @@ const installTempo = observabilityConfig.requireBoolean('installTempo');
 const installCertManager = observabilityConfig.requireBoolean('installCertManager');
 const installOpenTelemetryOperator = observabilityConfig.requireBoolean('installOpenTelemetryOperator');
 const installGrafana = observabilityConfig.requireBoolean('installGrafana');
+const installMimir = observabilityConfig.requireBoolean('installMimir');
 
-export { installPrometheus, installLoki, installTempo, installCertManager, installOpenTelemetryOperator, installGrafana }
+export { installPrometheus, installLoki, installTempo, installCertManager, installOpenTelemetryOperator, installGrafana, installMimir }
