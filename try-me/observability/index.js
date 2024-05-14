@@ -49,16 +49,6 @@ export default async () => {
     },
         { dependsOn: [otelOperatorHelmChart] });
 
-    if (config.installPrometheus) {
-        new HelmRelease('prometheus', {
-            chartName: 'prometheus',
-            chartVersion: '25.20.1',
-            chartNamespace: namespace,
-            chartValuesPath: './charts_values/prometheus_values.yaml',
-            chartRepositoryUrl: 'https://prometheus-community.github.io/helm-charts'
-        });
-    }
-
     let lokiHelmChart;
 
     if (config.installLoki) {
