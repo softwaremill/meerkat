@@ -8,7 +8,7 @@ export class HelmRelease extends pulumi.ComponentResource {
 
         let helmRelease = new k8s.helm.v3.Release(releaseName, {
             chart: helmConfig.chartName,
-            name: helmConfig.chartName,
+            name: releaseName,
             version: helmConfig.chartVersion,
             namespace: helmConfig.chartNamespace,
             valueYamlFiles: [new pulumi.asset.FileAsset(helmConfig.chartValuesPath)],
