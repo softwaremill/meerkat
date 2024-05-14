@@ -72,6 +72,21 @@ export default async () => {
         }, { dependsOn: bucket });
     }
 
+    let mimirHelmChart;
+
+    if (config.installMimir) {
+        let bucket = new MinioBucket('mimir-metrics', namespace, { dependsOn: lokiHelmChart });
+        new MinioBucket('mimir-ruler', namespace, { dependsOn: lokiHelmChart });
+        new MinioBucket('mimir-tsdb', namespace, { dependsOn: lokiHelmChart });
+        mimirHelmChart = new HelmRelease("mimir", {
+            chartName: "mimir-distributed",
+            chartVersion: "5.3.0",
+            chartNamespace: namespace,
+            chartValuesPath: "./charts_values/mimir_values.yaml",
+            chartRepositoryUrl: "https://grafana.github.io/helm-charts"
+        }, { dependsOn: bucket });
+    }
+
     if (config.installGrafana) {
         new HelmRelease("grafana", {
             chartName: "grafana",
@@ -79,20 +94,7 @@ export default async () => {
             chartNamespace: namespace,
             chartValuesPath: "./charts_values/grafana_values.yaml",
             chartRepositoryUrl: "https://grafana.github.io/helm-charts"
-        });
-    }
-
-    if (config.installMimir) {
-        let bucket = new MinioBucket('mimir-metrics', namespace, { dependsOn: lokiHelmChart });
-        new MinioBucket('mimir-ruler', namespace, { dependsOn: lokiHelmChart });
-        new MinioBucket('mimir-tsdb', namespace, { dependsOn: lokiHelmChart });
-        new HelmRelease("mimir", {
-            chartName: "mimir-distributed",
-            chartVersion: "5.3.0",
-            chartNamespace: namespace,
-            chartValuesPath: "./charts_values/mimir_values.yaml",
-            chartRepositoryUrl: "https://grafana.github.io/helm-charts"
-        }, { dependsOn: bucket });
+        }, { dependsOn: mimirHelmChart });
     }
 
     //
