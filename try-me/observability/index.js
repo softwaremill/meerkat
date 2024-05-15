@@ -49,16 +49,6 @@ export default async () => {
     },
         { dependsOn: [otelOperatorHelmChart] });
 
-    if (config.installPrometheus) {
-        new HelmRelease('prometheus', {
-            chartName: 'prometheus',
-            chartVersion: '25.20.1',
-            chartNamespace: namespace,
-            chartValuesPath: './charts_values/prometheus_values.yaml',
-            chartRepositoryUrl: 'https://prometheus-community.github.io/helm-charts'
-        });
-    }
-
     let lokiHelmChart;
 
     if (config.installLoki) {
@@ -82,6 +72,21 @@ export default async () => {
         }, { dependsOn: bucket });
     }
 
+    let mimirHelmChart;
+
+    if (config.installMimir) {
+        let bucket = new MinioBucket('mimir-metrics', namespace, { dependsOn: lokiHelmChart });
+        new MinioBucket('mimir-ruler', namespace, { dependsOn: lokiHelmChart });
+        new MinioBucket('mimir-tsdb', namespace, { dependsOn: lokiHelmChart });
+        mimirHelmChart = new HelmRelease("mimir", {
+            chartName: "mimir-distributed",
+            chartVersion: "5.3.0",
+            chartNamespace: namespace,
+            chartValuesPath: "./charts_values/mimir_values.yaml",
+            chartRepositoryUrl: "https://grafana.github.io/helm-charts"
+        }, { dependsOn: bucket });
+    }
+
     if (config.installGrafana) {
         new HelmRelease("grafana", {
             chartName: "grafana",
@@ -89,7 +94,7 @@ export default async () => {
             chartNamespace: namespace,
             chartValuesPath: "./charts_values/grafana_values.yaml",
             chartRepositoryUrl: "https://grafana.github.io/helm-charts"
-        });
+        }, { dependsOn: mimirHelmChart });
     }
 
     //

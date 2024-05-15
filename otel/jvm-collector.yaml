@@ -41,7 +41,7 @@ spec:
       loki:
         endpoint: "http://loki-gateway.observability/loki/api/v1/push"
       otlphttp/metrics:
-        endpoint: "http://prometheus-server.observability/api/v1/otlp/"
+        endpoint: "http://mimir-nginx.observability/otlp"
         tls:
           insecure: true
       otlphttp/traces:

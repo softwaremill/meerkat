@@ -1,0 +1,39 @@
+mimir: 
+  structuredConfig:
+    common:
+      storage:
+        backend: s3
+        s3:
+          bucket_name: mimir-metrics
+          endpoint: loki-minio.observability:9000
+          insecure: true
+          secret_access_key: "${MINIO_SECRET_KEY}"
+          access_key_id: "${MINIO_ACCESS_KEY_ID}"
+    blocks_storage:
+      s3:
+        bucket_name: mimir-tsdb
+    alertmanager_storage:
+      s3:
+        bucket_name: mimir-ruler
+global:
+  extraEnv:
+  - name: MINIO_ACCESS_KEY_ID
+    valueFrom:
+      secretKeyRef:
+        name: loki-minio
+        key: rootUser
+  - name: MINIO_SECRET_KEY
+    valueFrom:
+      secretKeyRef:
+        name: loki-minio
+        key: rootPassword
+minio:
+  enabled: false
+ingester:
+  replicas: 1
+query_scheduler:
+  enabled: false
+querier:
+  replicas: 1
+overrides_exporter:
+  enabled: false

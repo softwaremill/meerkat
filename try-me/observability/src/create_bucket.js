@@ -6,9 +6,9 @@ export class MinioBucket extends pulumi.ComponentResource {
     constructor(bucketName, namespace, opts) {
         super("meerkat:MinioBucket", bucketName, namespace, opts);
 
-        new k8s.batch.v1.Job("job", {
+        new k8s.batch.v1.Job("create-" + bucketName + "-bucket", {
             metadata: {
-                name: 'create-bucket',
+                name: "create-" + bucketName + "-bucket",
                 namespace: namespace,
             },
             spec: {
@@ -32,12 +32,16 @@ export class MinioBucket extends pulumi.ComponentResource {
                                         key: 'rootPassword',
                                     },
                                 }
+                            },
+                            {
+                                name: 'BUCKET_NAME',
+                                value: bucketName,
                             }
                             ],
                             name: 'mc',
                             image: 'minio/mc',
                             command: ['sh', '-c'],
-                            args: ['mc alias set minio http://loki-minio.observability:9000 $MINIO_ACCESS_KEY $MINIO_SECRET_KEY; mc mb minio/tempo-traces; mc anonymous set public minio/tempo-traces']
+                            args: ['mc alias set minio http://loki-minio.observability:9000 $MINIO_ACCESS_KEY $MINIO_SECRET_KEY; mc mb minio/$BUCKET_NAME; mc anonymous set public minio/$BUCKET_NAME']
                         },],
                         restartPolicy: 'OnFailure',
                     },
