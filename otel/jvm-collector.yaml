@@ -88,7 +88,7 @@ spec:
             - k8s.deployment.name
             - k8s.node.name
           labels:
-          - tag_name: app # extracts value of label from pods with key `label2` with regexp and inserts it as a tag with key `l2`
+          - tag_name: app # extracts value of label from pods with key `app` and inserts it as a tag with key `app`
             key: app
             from: pod
       transform:
