@@ -1,4 +1,4 @@
-apiVersion: opentelemetry.io/v1alpha1
+apiVersion: opentelemetry.io/v1beta1
 kind: OpenTelemetryCollector
 metadata:
   name: jvm-otel
@@ -13,8 +13,7 @@ spec:
     # Discover prometheus operator CR: PodMonitor and ServiceMonitor
     prometheusCR:
       enabled: true
-
-  config: |
+  config:
     service:
       extensions: [health_check, pprof, zpages]
       pipelines:
@@ -34,8 +33,8 @@ spec:
     extensions:
       zpages:
         endpoint: :55679
-      pprof:
-      health_check:
+      pprof: {}
+      health_check: {}
 
     exporters: 
       loki:

@@ -36,7 +36,7 @@ export default async () => {
     if (config.installOpenTelemetryOperator) {
         otelOperatorHelmChart = new HelmRelease('opentelemetry-operator', {
             chartName: 'opentelemetry-operator',
-            chartVersion: '0.56.1',
+            chartVersion: '0.58.0',
             chartNamespace: namespace,
             chartValuesPath: './charts_values/opentelemetry_operator_values.yaml',
             chartRepositoryUrl: 'https://open-telemetry.github.io/opentelemetry-helm-charts'
