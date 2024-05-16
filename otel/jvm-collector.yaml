@@ -30,7 +30,7 @@ spec:
         logs:
           receivers: [otlp]
           processors: [memory_limiter, k8sattributes, transform, batch]
-          exporters: [debug, otlphttp/logs]
+          exporters: [debug, loki]
         metrics:
           receivers: [otlp]
           processors: [memory_limiter, k8sattributes, transform, batch]
@@ -53,10 +53,8 @@ spec:
     exporters:
       debug:
         verbosity: basic
-      otlphttp/logs:
-        endpoint: "http://loki-gateway.observability/otlp"
-        tls:
-          insecure: true
+      loki:
+        endpoint: "http://loki-gateway.observability/loki/api/v1/push"
       otlphttp/metrics:
         endpoint: "http://mimir-nginx.observability/otlp"
         tls:
@@ -74,11 +72,6 @@ spec:
       batch:
         send_batch_size: 10000
         timeout: 10s
-      resource:
-        attributes:
-          - action: insert
-            key: loki.resource.labels
-            value: service.name, k8s.pod.name, k8s.container.name, k8s.namespace.name
       k8sattributes:
         auth_type: 'serviceAccount'
         passthrough: false
@@ -115,6 +108,8 @@ spec:
                - set(attributes["pod"], resource.attributes["k8s.pod.name"])
                - set(attributes["cluster"], resource.attributes["k8s.cluster.name"])
                - set(attributes["app"], resource.attributes["app"])
+               - set(attributes["loki.attribute.labels"], "node, deployment, namespace, container, pod, app") # `loki.attribute.labels` attribute necessary to notify Loki that such attributes names should be used as logs labels
+                                                                                                              # `loki.resource.labels` can be used te extract labels from resource.attributes
          trace_statements:
            - context: span
              statements:
