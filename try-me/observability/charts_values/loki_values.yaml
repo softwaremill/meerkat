@@ -9,9 +9,6 @@ backend:
 chunksCache:
   enabled: false
 
-limits_config:
-  allow_structured_metadata: true
-
 loki:
   auth_enabled: false
   storage_config:
