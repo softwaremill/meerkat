@@ -14,11 +14,17 @@ spec:
     # Discover prometheus operator CR: PodMonitor and ServiceMonitor
     prometheusCR:
       enabled: true
+  env:
+    - name: KUBE_NODE_NAME
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: spec.nodeName
   config:
     service:
       telemetry:
         logs:
-          level: DEBUG
+          level: WARN
       extensions: [health_check, pprof, zpages]
       pipelines:
         logs:
@@ -89,12 +95,12 @@ spec:
          metric_statements:
            - context: datapoint
              statements:
-               - set(attributes["k8s_node_name"], resource.attributes["k8s.node.name"])
-               - set(attributes["k8s_deployment_name"], resource.attributes["k8s.deployment.name"])
-               - set(attributes["k8s_namespace_name"], resource.attributes["k8s.namespace.name"])
-               - set(attributes["k8s_container_name"], resource.attributes["k8s.container.name"])
-               - set(attributes["k8s_pod_name"], resource.attributes["k8s.pod.name"])
-               - set(attributes["k8s_cluster_name"], resource.attributes["k8s.cluster.name"])
+               - set(attributes["node"], resource.attributes["k8s.node.name"])
+               - set(attributes["deployment"], resource.attributes["k8s.deployment.name"])
+               - set(attributes["namespace"], resource.attributes["k8s.namespace.name"])
+               - set(attributes["container"], resource.attributes["k8s.container.name"])
+               - set(attributes["pod"], resource.attributes["k8s.pod.name"])
+               - set(attributes["cluster"], resource.attributes["k8s.cluster.name"])
                - set(attributes["app"], resource.attributes["app"])
 
     receivers:
