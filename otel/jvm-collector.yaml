@@ -29,8 +29,8 @@ spec:
       pipelines:
         logs:
           receivers: [otlp]
-          processors: [memory_limiter, k8sattributes, transform, resource, batch]
-          exporters: [loki]
+          processors: [memory_limiter, k8sattributes, transform, batch]
+          exporters: [debug, otlphttp/logs]
         metrics:
           receivers: [otlp]
           processors: [memory_limiter, k8sattributes, transform, batch]
@@ -43,7 +43,7 @@ spec:
           receivers: [otlp]
           processors: [memory_limiter, k8sattributes, transform, batch]
           exporters: [otlphttp/traces]
-
+#
     extensions:
       zpages:
         endpoint: :55679
@@ -51,9 +51,12 @@ spec:
       health_check: {}
 
     exporters:
-      debug: {}
-      loki:
-        endpoint: "http://loki-gateway.observability/loki/api/v1/push"
+      debug:
+        verbosity: basic
+      otlphttp/logs:
+        endpoint: "http://loki-gateway.observability/otlp"
+        tls:
+          insecure: true
       otlphttp/metrics:
         endpoint: "http://mimir-nginx.observability/otlp"
         tls:
@@ -94,6 +97,26 @@ spec:
       transform:
          metric_statements:
            - context: datapoint
+             statements:
+               - set(attributes["node"], resource.attributes["k8s.node.name"])
+               - set(attributes["deployment"], resource.attributes["k8s.deployment.name"])
+               - set(attributes["namespace"], resource.attributes["k8s.namespace.name"])
+               - set(attributes["container"], resource.attributes["k8s.container.name"])
+               - set(attributes["pod"], resource.attributes["k8s.pod.name"])
+               - set(attributes["cluster"], resource.attributes["k8s.cluster.name"])
+               - set(attributes["app"], resource.attributes["app"])
+         log_statements:
+           - context: log
+             statements:
+               - set(attributes["node"], resource.attributes["k8s.node.name"])
+               - set(attributes["deployment"], resource.attributes["k8s.deployment.name"])
+               - set(attributes["namespace"], resource.attributes["k8s.namespace.name"])
+               - set(attributes["container"], resource.attributes["k8s.container.name"])
+               - set(attributes["pod"], resource.attributes["k8s.pod.name"])
+               - set(attributes["cluster"], resource.attributes["k8s.cluster.name"])
+               - set(attributes["app"], resource.attributes["app"])
+         trace_statements:
+           - context: span
              statements:
                - set(attributes["node"], resource.attributes["k8s.node.name"])
                - set(attributes["deployment"], resource.attributes["k8s.deployment.name"])
