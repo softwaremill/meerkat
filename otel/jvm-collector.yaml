@@ -31,7 +31,7 @@ spec:
           exporters: [debug, otlphttp/metrics]
         metrics/prometheus:
           receivers: [prometheus]
-          processors: [memory_limiter, batch]
+          processors: [memory_limiter, batch] # seperate pipelines for prometheus metrics to not inject additional labels which increased cardinality
           exporters: [debug, otlphttp/metrics]
         traces:
           receivers: [otlp]
@@ -81,6 +81,10 @@ spec:
             - k8s.pod.uid
             - k8s.deployment.name
             - k8s.node.name
+          labels:
+          - tag_name: app # extracts value of label from pods with key `label2` with regexp and inserts it as a tag with key `l2`
+            key: app
+            from: pod
       transform:
          metric_statements:
            - context: datapoint
@@ -91,6 +95,7 @@ spec:
                - set(attributes["k8s_container_name"], resource.attributes["k8s.container.name"])
                - set(attributes["k8s_pod_name"], resource.attributes["k8s.pod.name"])
                - set(attributes["k8s_cluster_name"], resource.attributes["k8s.cluster.name"])
+               - set(attributes["app"], resource.attributes["app"])
 
     receivers:
       otlp:
