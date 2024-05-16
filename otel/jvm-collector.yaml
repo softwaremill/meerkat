@@ -26,8 +26,12 @@ spec:
           processors: [resource, batch]
           exporters: [loki]
         metrics:
-          receivers: [otlp, prometheus]
-          processors: [memory_limiter, k8sattributes, batch]
+          receivers: [otlp]
+          processors: [memory_limiter, k8sattributes, transform, batch]
+          exporters: [debug, otlphttp/metrics]
+        metrics/prometheus:
+          receivers: [prometheus]
+          processors: [memory_limiter, batch]
           exporters: [debug, otlphttp/metrics]
         traces:
           receivers: [otlp]
@@ -77,6 +81,16 @@ spec:
             - k8s.pod.uid
             - k8s.deployment.name
             - k8s.node.name
+      transform:
+         metric_statements:
+           - context: datapoint
+             statements:
+               - set(attributes["k8s_node_name"], resource.attributes["k8s.node.name"])
+               - set(attributes["k8s_deployment_name"], resource.attributes["k8s.deployment.name"])
+               - set(attributes["k8s_namespace_name"], resource.attributes["k8s.namespace.name"])
+               - set(attributes["k8s_container_name"], resource.attributes["k8s.container.name"])
+               - set(attributes["k8s_pod_name"], resource.attributes["k8s.pod.name"])
+               - set(attributes["k8s_cluster_name"], resource.attributes["k8s.cluster.name"])
 
     receivers:
       otlp:
