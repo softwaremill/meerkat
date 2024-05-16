@@ -29,7 +29,7 @@ spec:
       pipelines:
         logs:
           receivers: [otlp]
-          processors: [resource, batch]
+          processors: [memory_limiter, k8sattributes, transform, resource, batch]
           exporters: [loki]
         metrics:
           receivers: [otlp]
@@ -41,7 +41,7 @@ spec:
           exporters: [debug, otlphttp/metrics]
         traces:
           receivers: [otlp]
-          processors: [batch]
+          processors: [memory_limiter, k8sattributes, transform, batch]
           exporters: [otlphttp/traces]
 
     extensions:
