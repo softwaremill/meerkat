@@ -16,6 +16,9 @@ spec:
       enabled: true
   config:
     service:
+      telemetry:
+        logs:
+          level: DEBUG
       extensions: [health_check, pprof, zpages]
       pipelines:
         logs:
@@ -25,7 +28,7 @@ spec:
         metrics:
           receivers: [otlp, prometheus]
           processors: [memory_limiter, k8sattributes, batch]
-          exporters: [otlphttp/metrics]
+          exporters: [debug, otlphttp/metrics]
         traces:
           receivers: [otlp]
           processors: [batch]
@@ -37,7 +40,8 @@ spec:
       pprof: {}
       health_check: {}
 
-    exporters: 
+    exporters:
+      debug:
       loki:
         endpoint: "http://loki-gateway.observability/loki/api/v1/push"
       otlphttp/metrics:
@@ -73,37 +77,6 @@ spec:
             - k8s.pod.uid
             - k8s.deployment.name
             - k8s.node.name
-          # annotations:
-          #   # Extracts the value of a pod annotation with key `annotation-one` and inserts it as a resource attribute with key `a1`
-          #   - tag_name: a1
-          #     key: annotation-one
-          #     from: pod
-          #   # Extracts the value of a namespaces annotation with key `annotation-two` with regexp and inserts it as a resource  with key `a2`
-          #   - tag_name: a2
-          #     key: annotation-two
-          #     regex: field=(?P<value>.+)
-          #     from: namespace
-          # labels:
-          #   # Extracts the value of a namespaces label with key `label1` and inserts it as a resource attribute with key `l1`
-          #   - tag_name: l1
-          #     key: label1
-          #     from: namespace
-          #   # Extracts the value of a pod label with key `label2` with regexp and inserts it as a resource attribute with key `l2`
-          #   - tag_name: l2
-          #     key: label2
-          #     regex: field=(?P<value>.+)
-          #     from: pod
-        pod_association: # How to associate the data to a pod (order matters)
-          - sources: # First try to use the value of the resource attribute k8s.pod.ip
-              - from: resource_attribute
-                name: k8s.pod.ip
-          - sources: # Then try to use the value of the resource attribute k8s.pod.uid
-              - from: resource_attribute
-                name: k8s.pod.uid
-          - sources: # If neither of those work, use the request's connection to get the pod IP.
-              - from: connection
-
-
 
     receivers:
       otlp:
