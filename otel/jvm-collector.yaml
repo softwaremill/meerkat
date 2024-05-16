@@ -51,7 +51,7 @@ spec:
       health_check: {}
 
     exporters:
-      debug:
+      debug: {}
       loki:
         endpoint: "http://loki-gateway.observability/loki/api/v1/push"
       otlphttp/metrics:
