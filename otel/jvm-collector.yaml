@@ -4,11 +4,11 @@ metadata:
   name: jvm-otel
 spec:
   serviceAccount: jvm-otel-serviceaccount
-  replicas: 2
-  mode: statefulset
+  mode: daemonset
   upgradeStrategy: automatic
   # https://opentelemetry.io/docs/kubernetes/operator/target-allocator/
   targetAllocator:
+    allocationStrategy: per-node
     enabled: true
     serviceAccount: jvm-otel-collector-targetallocator
     # Discover prometheus operator CR: PodMonitor and ServiceMonitor
@@ -32,7 +32,7 @@ spec:
           processors: [memory_limiter, k8sattributes, transform, batch]
           exporters: [debug, loki]
         metrics:
-          receivers: [otlp]
+          receivers: [otlp, hostmetrics]
           processors: [memory_limiter, k8sattributes, transform, batch]
           exporters: [debug, otlphttp/metrics]
         metrics/prometheus:
@@ -43,7 +43,7 @@ spec:
           receivers: [otlp]
           processors: [memory_limiter, k8sattributes, transform, batch]
           exporters: [otlphttp/traces]
-#
+
     extensions:
       zpages:
         endpoint: :55679
@@ -131,6 +131,14 @@ spec:
             endpoint: 0.0.0.0:4317
           http:
             endpoint: 0.0.0.0:4318
+        
+      hostmetrics:
+        scrapers:
+          cpu: {}
+          memory: {}
+          network: {}
+          disk: {}
+          load: {}
 
       prometheus:
         config:
