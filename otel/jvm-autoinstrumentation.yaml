@@ -13,7 +13,11 @@ spec:
     argument: "1"
   java:
     env:
+      - name: OTLP_METRICS_EXPORTER
+        value: otlp
       - name: OTEL_LOGS_EXPORTER
         value: otlp
       - name: OTEL_TRACES_EXPORTER
         value: otlp
+      - name: OTEL_RESOURCE_ATTRIBUTES
+        value: service.name=backend2-service,service.namespace=tutorial-application

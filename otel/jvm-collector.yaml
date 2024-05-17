@@ -3,6 +3,7 @@ kind: OpenTelemetryCollector
 metadata:
   name: jvm-otel
 spec:
+  serviceAccount: jvm-otel-serviceaccount
   replicas: 2
   mode: statefulset
   upgradeStrategy: automatic
@@ -13,32 +14,50 @@ spec:
     # Discover prometheus operator CR: PodMonitor and ServiceMonitor
     prometheusCR:
       enabled: true
+  env:
+    - name: KUBE_NODE_NAME
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: spec.nodeName
   config:
     service:
+      telemetry:
+        logs:
+          level: WARN
       extensions: [health_check, pprof, zpages]
       pipelines:
         logs:
           receivers: [otlp]
-          processors: [resource, batch]
-          exporters: [loki]
+          processors: [memory_limiter, k8sattributes, transform, batch]
+          exporters: [debug, loki]
         metrics:
-          receivers: [otlp, prometheus]
-          processors: [memory_limiter, batch]
-          exporters: [otlphttp/metrics]
+          receivers: [otlp]
+          processors: [memory_limiter, k8sattributes, transform, batch]
+          exporters: [debug, otlphttp/metrics]
+        metrics/prometheus:
+          receivers: [prometheus]
+          processors: [memory_limiter, batch] # seperate pipelines for prometheus metrics to not inject additional labels which increased cardinality
+          exporters: [debug, otlphttp/metrics]
         traces:
           receivers: [otlp]
-          processors: [batch]
+          processors: [memory_limiter, k8sattributes, transform, batch]
           exporters: [otlphttp/traces]
-
+#
     extensions:
       zpages:
         endpoint: :55679
       pprof: {}
       health_check: {}
 
-    exporters: 
+    exporters:
+      debug:
+        verbosity: basic
       loki:
         endpoint: "http://loki-gateway.observability/loki/api/v1/push"
+        default_labels_enabled:
+          exporter: false
+          job: true
       otlphttp/metrics:
         endpoint: "http://mimir-nginx.observability/otlp"
         tls:
@@ -56,12 +75,54 @@ spec:
       batch:
         send_batch_size: 10000
         timeout: 10s
-      resource:
-        attributes:
-          - action: insert
-            key: loki.resource.labels
-            value: service.name, k8s.pod.name, k8s.container.name, k8s.namespace.name
-
+      k8sattributes:
+        auth_type: 'serviceAccount'
+        passthrough: false
+        extract:
+          metadata: # extracted from the pod
+            - k8s.namespace.name
+            - k8s.pod.name
+            - k8s.pod.start_time
+            - k8s.pod.uid
+            - k8s.deployment.name
+            - k8s.node.name
+          labels:
+          - tag_name: app # extracts value of label from pods with key `app` and inserts it as a tag with key `app`
+            key: app
+            from: pod
+      transform:
+         metric_statements:
+           - context: datapoint
+             statements:
+               - set(attributes["node"], resource.attributes["k8s.node.name"])
+               - set(attributes["deployment"], resource.attributes["k8s.deployment.name"])
+               - set(attributes["namespace"], resource.attributes["k8s.namespace.name"])
+               - set(attributes["container"], resource.attributes["k8s.container.name"])
+               - set(attributes["pod"], resource.attributes["k8s.pod.name"])
+               - set(attributes["cluster"], resource.attributes["k8s.cluster.name"])
+               - set(attributes["app"], resource.attributes["app"])
+         log_statements:
+           - context: log
+             statements:
+               - set(attributes["node"], resource.attributes["k8s.node.name"])
+               - set(attributes["deployment"], resource.attributes["k8s.deployment.name"])
+               - set(attributes["namespace"], resource.attributes["k8s.namespace.name"])
+               - set(attributes["container"], resource.attributes["k8s.container.name"])
+               - set(attributes["pod"], resource.attributes["k8s.pod.name"])
+               - set(attributes["cluster"], resource.attributes["k8s.cluster.name"])
+               - set(attributes["app"], resource.attributes["app"])
+               - set(attributes["loki.attribute.labels"], "node, deployment, namespace, container, pod, app") # `loki.attribute.labels` attribute necessary to notify Loki that such attributes names should be used as logs labels
+                                                                                                              # `loki.resource.labels` can be used te extract labels from resource.attributes
+         trace_statements:
+           - context: span
+             statements:
+               - set(attributes["node"], resource.attributes["k8s.node.name"])
+               - set(attributes["deployment"], resource.attributes["k8s.deployment.name"])
+               - set(attributes["namespace"], resource.attributes["k8s.namespace.name"])
+               - set(attributes["container"], resource.attributes["k8s.container.name"])
+               - set(attributes["pod"], resource.attributes["k8s.pod.name"])
+               - set(attributes["cluster"], resource.attributes["k8s.cluster.name"])
+               - set(attributes["app"], resource.attributes["app"])
 
     receivers:
       otlp:

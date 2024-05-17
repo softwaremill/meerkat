@@ -9,4 +9,7 @@ resources:
   - jvm-collector-targetallocator-clusterrole.yaml
   - jvm-collector-targetallocator-serviceaccount.yaml
   - jvm-collector-targetallocator-clusterrolebinding.yaml
+  - jvm-collector-clusterrole.yaml
+  - jvm-collector-clusterrolebinding.yaml
+  - jvm-collector-serviceaccount.yaml
   # - https://github.com/cert-manager/cert-manager/releases/download/v1.14.5/cert-manager.crds.yaml install manually if not using Pulumi
