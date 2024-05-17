@@ -55,6 +55,9 @@ spec:
         verbosity: basic
       loki:
         endpoint: "http://loki-gateway.observability/loki/api/v1/push"
+        default_labels_enabled:
+          exporter: false
+          job: true
       otlphttp/metrics:
         endpoint: "http://mimir-nginx.observability/otlp"
         tls:
