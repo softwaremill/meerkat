@@ -37,7 +37,7 @@ spec:
           processors: [memory_limiter, k8sattributes, transform, batch]
           exporters: [debug, loki]
         metrics:
-          receivers: [ otlp, hostmetrics]
+          receivers: [ otlp, hostmetrics, kubeletstats]
           processors: [memory_limiter, resource, k8sattributes, transform, batch]
           exporters: [debug, otlphttp/metrics]
         metrics/prometheus:
@@ -152,6 +152,16 @@ spec:
             endpoint: 0.0.0.0:4317
           http:
             endpoint: 0.0.0.0:4318
+      
+      kubeletstats:
+        collection_interval: 20s
+        auth_type: "serviceAccount"
+        endpoint: "https://${env:KUBE_NODE_NAME}:10250"
+        insecure_skip_verify: true
+        metric_groups:
+        - pod
+        - container
+        - volume
         
       hostmetrics:
         scrapers:
