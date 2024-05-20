@@ -152,12 +152,6 @@ spec:
             endpoint: 0.0.0.0:4317
           http:
             endpoint: 0.0.0.0:4318
-
-      # kubeletstats:
-      #   auth_type: 'serviceAccount'
-      #   insecure_skip_verify: true
-      #   metric_groups:
-      #     - node
         
       hostmetrics:
         scrapers:
