@@ -87,7 +87,6 @@ export default async () => {
         }, { dependsOn: bucket });
     }
 
-
     if (config.installGrafana) {
         new HelmRelease("grafana", {
             chartName: "grafana",
@@ -100,7 +99,6 @@ export default async () => {
 
     //
     // TODO: further installed chart processing if required
-
 
     // return Pulumi outputs
     return {}
