@@ -90,7 +90,7 @@ export default async () => {
     if (config.installGrafana) {
         new HelmRelease("grafana", {
             chartName: "grafana",
-            chartVersion: "7.3.9",
+            chartVersion: "7.3.11",
             chartNamespace: namespace,
             chartValuesPath: "./charts_values/grafana_values.yaml",
             chartRepositoryUrl: "https://grafana.github.io/helm-charts"
