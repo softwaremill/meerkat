@@ -4,11 +4,11 @@ metadata:
   name: jvm-otel
 spec:
   serviceAccount: jvm-otel-serviceaccount
-  replicas: 2
-  mode: statefulset
+  mode: daemonset
   upgradeStrategy: automatic
   # https://opentelemetry.io/docs/kubernetes/operator/target-allocator/
   targetAllocator:
+    allocationStrategy: per-node
     enabled: true
     serviceAccount: jvm-otel-collector-targetallocator
     # Discover prometheus operator CR: PodMonitor and ServiceMonitor
@@ -20,6 +20,11 @@ spec:
         fieldRef:
           apiVersion: v1
           fieldPath: spec.nodeName
+    - name: KUBE_POD_NAME
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: metadata.name
   config:
     service:
       telemetry:
@@ -32,8 +37,8 @@ spec:
           processors: [memory_limiter, k8sattributes, transform, batch]
           exporters: [debug, loki]
         metrics:
-          receivers: [otlp]
-          processors: [memory_limiter, k8sattributes, transform, batch]
+          receivers: [ otlp, hostmetrics, kubeletstats]
+          processors: [memory_limiter, resource, k8sattributes, transform, batch]
           exporters: [debug, otlphttp/metrics]
         metrics/prometheus:
           receivers: [prometheus]
@@ -43,7 +48,7 @@ spec:
           receivers: [otlp]
           processors: [memory_limiter, k8sattributes, transform, batch]
           exporters: [otlphttp/traces]
-#
+
     extensions:
       zpages:
         endpoint: :55679
@@ -75,9 +80,25 @@ spec:
       batch:
         send_batch_size: 10000
         timeout: 10s
+      resource:
+        attributes:
+        - key: k8s.node.name
+          value: ${env:KUBE_NODE_NAME}
+          action: insert
+        - key: k8s.pod.name
+          value: ${env:KUBE_POD_NAME}
+          action: insert
       k8sattributes:
         auth_type: 'serviceAccount'
         passthrough: false
+        pod_association:
+        - sources:
+            - from: resource_attribute
+              name: k8s.node.name
+            - from: resource_attribute
+              name: k8s.pod.name
+        - sources:
+            - from: connection
         extract:
           metadata: # extracted from the pod
             - k8s.namespace.name
@@ -101,6 +122,10 @@ spec:
                - set(attributes["pod"], resource.attributes["k8s.pod.name"])
                - set(attributes["cluster"], resource.attributes["k8s.cluster.name"])
                - set(attributes["app"], resource.attributes["app"])
+               - set(attributes["host_name"], resource.attributes["k8s.node.name"])
+               - set(attributes["service_namespace"], resource.attributes["k8s.namespace.name"])
+
+
          log_statements:
            - context: log
              statements:
@@ -131,6 +156,49 @@ spec:
             endpoint: 0.0.0.0:4317
           http:
             endpoint: 0.0.0.0:4318
+      
+      kubeletstats:
+        collection_interval: 20s
+        auth_type: "serviceAccount"
+        endpoint: "https://${env:KUBE_NODE_NAME}:10250"
+        insecure_skip_verify: true
+        metric_groups:
+        - pod
+        - container
+        - volume
+        
+      hostmetrics:
+        scrapers:
+          cpu:
+            metrics:
+              system.cpu.logical.count:
+                enabled: true
+          memory:
+            metrics:
+              system.memory.utilization:
+                enabled: true
+              system.memory.limit:
+                enabled: true
+          load: {}
+          disk: {}
+          filesystem:
+            metrics:
+              system.filesystem.utilization:
+                enabled: true
+          network: {}
+          paging: {}
+          processes: {}
+          process:
+            mute_process_user_error: true
+            metrics:
+              process.cpu.utilization:
+                enabled: true
+              process.memory.utilization:
+                enabled: true
+              process.threads:
+                enabled: true
+              process.paging.faults:
+                enabled: true
 
       prometheus:
         config:

@@ -1,6 +1,8 @@
 sidecar:
   datasources:
     enabled: true
+  dashboards:
+    enabled: true
 datasources:
   datasources.yaml:
     apiVersion: 1
