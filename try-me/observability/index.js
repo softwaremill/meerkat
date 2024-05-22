@@ -107,7 +107,7 @@ export default async () => {
         configmapName: 'grafana-dashboard-hostmetrics',
         configmapNamespace: namespace,
         configmapLabels: { grafana_dashboard: "true" },
-        configmapFilePath: './dashboard-node-stats.json',
+        configmapFilePath: './dashboard-hostmetrics.json',
         configmapDataName: 'hostmetrics.json'
     }, { dependsOn: grafanaHelmChart });
 
