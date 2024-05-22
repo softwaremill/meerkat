@@ -122,6 +122,10 @@ spec:
                - set(attributes["pod"], resource.attributes["k8s.pod.name"])
                - set(attributes["cluster"], resource.attributes["k8s.cluster.name"])
                - set(attributes["app"], resource.attributes["app"])
+               - set(attributes["host_name"], resource.attributes["k8s.node.name"])
+               - set(attributes["service_namespace"], resource.attributes["k8s.namespace.name"])
+
+
          log_statements:
            - context: log
              statements:
@@ -165,11 +169,36 @@ spec:
         
       hostmetrics:
         scrapers:
-          cpu: {}
-          memory: {}
-          network: {}
-          disk: {}
+          cpu:
+            metrics:
+              system.cpu.logical.count:
+                enabled: true
+          memory:
+            metrics:
+              system.memory.utilization:
+                enabled: true
+              system.memory.limit:
+                enabled: true
           load: {}
+          disk: {}
+          filesystem:
+            metrics:
+              system.filesystem.utilization:
+                enabled: true
+          network: {}
+          paging: {}
+          processes: {}
+          process:
+            mute_process_user_error: true
+            metrics:
+              process.cpu.utilization:
+                enabled: true
+              process.memory.utilization:
+                enabled: true
+              process.threads:
+                enabled: true
+              process.paging.faults:
+                enabled: true
 
       prometheus:
         config:
