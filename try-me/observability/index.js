@@ -3,6 +3,7 @@ import * as k8s from '@pulumi/kubernetes';
 import * as config from './src/config.js'
 import { HelmRelease } from './src/chart_install.js';
 import { MinioBucket } from './src/create_bucket.js';
+import { Configmap } from './src/create_configmap.js';
 
 const createNamespace = (name) => {
     return new k8s.core.v1.Namespace(name, {
@@ -87,6 +88,8 @@ export default async () => {
         }, { dependsOn: bucket });
     }
 
+    let grafanaHelmChart;
+
     if (config.installGrafana) {
         new HelmRelease("grafana", {
             chartName: "grafana",
@@ -99,6 +102,14 @@ export default async () => {
 
     //
     // TODO: further installed chart processing if required
+
+    new Configmap('grafana-dashboard-hostmetrics', {
+        configmapName: 'grafana-dashboard-hostmetrics',
+        configmapNamespace: namespace,
+        configmapLabels: { grafana_dashboard: "true" },
+        configmapFilePath: './dashboard-node-stats.json',
+        configmapDataName: 'hostmetrics.json'
+    }, { dependsOn: grafanaHelmChart });
 
     // return Pulumi outputs
     return {}
