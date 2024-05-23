@@ -8,6 +8,12 @@ configMapGenerator:
   - name: host-metrics-dashboard
     files:
       - ./try-me/observability/dashboards/host-metrics-dashboard.json
+  - name: kubernetes-nodes-dashboard
+    files:
+      - ./try-me/observability/dashboards/kubernetes-nodes-dashboard.json
+  - name: kubernetes-pods-dashboard
+    files:
+      - ./try-me/observability/dashboards/kubernetes-pods-dashboard.json
 generatorOptions:
   disableNameSuffixHash: true
   labels:
