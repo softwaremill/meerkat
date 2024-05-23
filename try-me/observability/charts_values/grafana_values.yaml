@@ -28,6 +28,14 @@ datasources:
           filterBySpanID: false
           customQuery: true
           query: '{namespace="$${__span.tags.namespace}", pod="$${__span.tags.pod}"}'
+        tracesToMetrics:
+          datasourceUid: 'mimir'
+          spanStartTimeShift: '1h'
+          spanEndTimeShift: '-1h'
+          # tags: "[{ key: 'namespace'}, { key: 'pod'}]"
+          queries:
+            - name: 'Sample query'
+              query: 'sum(rate(process_runtime_jvm_cpu_utilization{$$__tags}[5m]))'
       uid: tempo
     - name: Mimir
       type: prometheus
