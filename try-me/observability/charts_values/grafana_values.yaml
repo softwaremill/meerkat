@@ -20,7 +20,15 @@ datasources:
       basicAuth: false
       jsonData:
         tracesToLogsV2:
-          datasourceUid: "loki"
+          datasourceUid: 'loki'
+          spanStartTimeShift: '-1s'
+          spanEndTimeShift: '1s'
+          # tags: ['namespace', 'pod']
+          filterByTraceID: false
+          filterBySpanID: false
+          customQuery: true
+          query: '{namespace="$${__span.tags.namespace}", pod="$${__span.tags.pod}"}'
+      uid: tempo
     - name: Mimir
       type: prometheus
       url: "http://mimir-nginx.observability.svc/prometheus"
