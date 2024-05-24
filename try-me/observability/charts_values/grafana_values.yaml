@@ -3,6 +3,9 @@ sidecar:
     enabled: true
   dashboards:
     enabled: true
+grafana.ini:
+  feature_toggles:
+    enable: 'traceToMetrics = true'
 datasources:
   datasources.yaml:
     apiVersion: 1
@@ -28,6 +31,7 @@ datasources:
       url: "http://tempo:3100"
       access: proxy
       basicAuth: false
+      uid: tempo
       jsonData:
         tracesToLogsV2:
           datasourceUid: 'loki'
@@ -37,16 +41,15 @@ datasources:
           filterByTraceID: false
           filterBySpanID: false
           customQuery: true
-          query: '{namespace="$${__span.tags.namespace}", pod="$${__span.tags.pod}"}'
+          query: '{namespace="$${__span.tags.namespace}", pod="$${__span.tags.pod}"'
         tracesToMetrics:
           datasourceUid: 'mimir'
-          spanStartTimeShift: '1h'
-          spanEndTimeShift: '-1h'
-          # tags: "[{ key: 'namespace'}, { key: 'pod'}]"
+          spanStartTimeShift: '-1m'
+          spanEndTimeShift: '1m'
+          tags: [{ key: 'app'}]
           queries:
             - name: 'Sample query'
               query: 'sum(rate(process_runtime_jvm_cpu_utilization{$$__tags}[5m]))'
-      uid: tempo
     - name: Mimir
       type: prometheus
       url: "http://mimir-nginx.observability.svc/prometheus"
