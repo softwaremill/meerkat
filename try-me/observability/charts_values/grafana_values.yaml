@@ -41,7 +41,7 @@ datasources:
           filterByTraceID: false
           filterBySpanID: false
           customQuery: true
-          query: '{namespace="$${__span.tags.namespace}", pod="$${__span.tags.pod}"}'
+          query: '{namespace="$${__span.tags.namespace}", pod="$${__span.tags.pod}"} |="$${__trace.traceId}"'
         tracesToMetrics:
           datasourceUid: 'mimir'
           spanStartTimeShift: '-1m'
