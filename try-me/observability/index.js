@@ -97,7 +97,14 @@ export default async () => {
         }, { dependsOn: mimirHelmChart });
     }
 
-    //
+    new HelmRelease("kube-state-metrics", {
+        chartName: "kube-state-metrics",
+        chartVersion: "5.19.0",
+        chartNamespace: "kube-system",
+        chartValuesPath: "./charts_values/kube_state_metrics_values.yaml",
+        chartRepositoryUrl: "https://prometheus-community.github.io/helm-charts"
+    });
+    
     // TODO: further installed chart processing if required
 
     // return Pulumi outputs
