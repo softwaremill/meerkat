@@ -13,4 +13,4 @@ TODO: add explanation of why this or not other component
 - [Grafana Loki](https://grafana.com/oss/loki/)
 - [Grafana Mimir](https://grafana.com/oss/mimir/)
 - [Grafana Tempo](https://grafana.com/oss/tempo/)
-- [Prometheus]()
+- [Prometheus](https://prometheus.io/)

@@ -1,6 +1,7 @@
 # Try-Me Local Environment Setup
 
 ## Overview
+
 The `try-me` directory offers scripts and configurations for setting up a local Kubernetes environment using 
 [Kind](https://kind.sigs.k8s.io/) and [Pulumi](https://www.pulumi.com/docs/languages-sdks/javascript/),
 making testing and development purposes of observability - friendly.
