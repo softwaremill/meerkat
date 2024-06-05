@@ -1,4 +1,7 @@
 tempo:
+  metricsGenerator:
+    enabled: true
+    remoteWriteUrl: "http://mimir-nginx.observability/api/v1/push"
   storage:
     trace:
       backend: s3
