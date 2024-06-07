@@ -44,7 +44,7 @@ to tear it down.
 ### 2. [Observability](../try-me/observability)
 
 This folder contains Pulumi code to deploy Observability Components into the Kind cluster. 
-Components are deployed as Helm Chart managed by Pulumi. Deploying requires couple steps.
+Components are deployed as [Helm](https://helm.sh/) Chart managed by Pulumi. Deploying requires couple steps.
 [Find out Components deployed](./Components.md)
 
 Inside observability folder.
@@ -74,6 +74,8 @@ kubectl patch deployment <your_deployment_name> -n <your_deployment_namespace> -
 kubectl get secret --namespace observability grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo # To retrieve Grafana admin password
 ```
 
+## Results
+screenshot
 
 
 For more details, visit the repository [here](https://github.com/softwaremill/meerkat/tree/main/try-me).

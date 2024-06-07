@@ -6,7 +6,7 @@ Observability Starter Kit for JVM Applications
 
 This project, initiated within the DevOps OSS space at SoftwareMill, aims to provide a ready-to-deploy configuration based on OpenTelemetry for JVM applications. 
 
-It's made of two parts - Kustomize manifests for Kubernetes and quick start configuration described with Pulumi. If you already have a Kubernetes cluster, look into [deploying OpenTelemetry Operator configuration only](docs/Kustomize.md). If you want a demo, look into [try-me environment instructions](docs/TryMe.md).
+It's made of two parts - [Kustomize](https://kustomize.io/#overview) manifests for Kubernetes and quick start configuration described with [Pulumi](https://www.pulumi.com/docs/languages-sdks/javascript/). If you already have a Kubernetes cluster, look into [deploying OpenTelemetry Operator configuration only](docs/Kustomize.md). If you want a demo, look into [try-me environment instructions](docs/TryMe.md).
 
 **This starter kit is intended for Developers and DevOps professionals who wish to implement observability into their JVM-based applications using Kubernetes.
 Future plans include extending the configuration to additional platforms beyond Kubernetes, such as AWS ECS.**
