@@ -108,6 +108,7 @@ export default async () => {
 
     new k8s.apps.v1.Deployment("petclinic", {
         metadata: {
+            name: "petclinic",
             labels: {
                 app: "petclinic",
             },
@@ -138,16 +139,21 @@ export default async () => {
         },
     });
 
-    new k8s.core.v1.Service("petclinic", {spec: {
-        ports: [{
-            port: 8080,
-            protocol: "TCP",
-            targetPort: 8080,
-        }],
-        selector: {
-            app: "petclinic",
+    new k8s.core.v1.Service("petclinic", {
+        metadata: {
+            name: "petclinic",
         },
-    }})
+        spec: {
+            ports: [{
+                port: 8080,
+                protocol: "TCP",
+                targetPort: 8080,
+            }],
+            selector: {
+                app: "petclinic",
+            },
+    }});
+
     // TODO: further installed chart processing if required
 
     // return Pulumi outputs
