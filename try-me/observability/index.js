@@ -24,7 +24,7 @@ export default async () => {
         });
         certManagerHelmChart = new HelmRelease('cert-manager', {
             chartName: 'cert-manager',
-            chartVersion: '1.14.5',
+            chartVersion: '1.15.0',
             chartNamespace: namespace,
             chartValuesPath: './charts_values/cert_manager_values.yaml',
             chartRepositoryUrl: 'https://charts.jetstack.io'
@@ -36,7 +36,7 @@ export default async () => {
     if (config.installOpenTelemetryOperator) {
         otelOperatorHelmChart = new HelmRelease('opentelemetry-operator', {
             chartName: 'opentelemetry-operator',
-            chartVersion: '0.58.0',
+            chartVersion: '0.62.0',
             chartNamespace: namespace,
             chartValuesPath: './charts_values/opentelemetry_operator_values.yaml',
             chartRepositoryUrl: 'https://open-telemetry.github.io/opentelemetry-helm-charts'
@@ -54,7 +54,7 @@ export default async () => {
     if (config.installLoki) {
         lokiHelmChart = new HelmRelease('loki', {
             chartName: 'loki',
-            chartVersion: '6.2.1',
+            chartVersion: '6.6.3',
             chartNamespace: namespace,
             chartValuesPath: './charts_values/loki_values.yaml',
             chartRepositoryUrl: 'https://grafana.github.io/helm-charts'
@@ -90,7 +90,7 @@ export default async () => {
     if (config.installGrafana) {
         new HelmRelease("grafana", {
             chartName: "grafana",
-            chartVersion: "7.3.11",
+            chartVersion: "8.0.0",
             chartNamespace: namespace,
             chartValuesPath: "./charts_values/grafana_values.yaml",
             chartRepositoryUrl: "https://grafana.github.io/helm-charts"
@@ -99,7 +99,7 @@ export default async () => {
 
     new HelmRelease("kube-state-metrics", {
         chartName: "kube-state-metrics",
-        chartVersion: "5.19.0",
+        chartVersion: "5.19.1",
         chartNamespace: "kube-system",
         chartValuesPath: "./charts_values/kube_state_metrics_values.yaml",
         chartRepositoryUrl: "https://prometheus-community.github.io/helm-charts"
