@@ -1,4 +1,4 @@
-minio:
+minio:                      # enable MinIO Helm Chart installation
   enabled: true
 read:
   replicas: 1
@@ -8,10 +8,9 @@ backend:
   replicas: 1
 chunksCache:
   enabled: false
-
 loki:
   auth_enabled: false
-  storage_config:
+  storage_config:           # configure storage mode
     tsdb_shipper:
       active_index_directory: /var/loki
       cache_location: /var/loki
