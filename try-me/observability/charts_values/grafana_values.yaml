@@ -28,7 +28,7 @@ datasources:
             urlDisplayLabel: 'View Trace'
     - name: Tempo
       type: tempo
-      url: "http://tempo:3100"
+      url: "http://tempo-query-frontend:3100"
       access: proxy
       basicAuth: false
       uid: tempo

@@ -1,14 +1,16 @@
-tempo:
-  metricsGenerator:
-    enabled: true
-    remoteWriteUrl: "http://mimir-nginx.observability/api/v1/push"
-  storage:
-    trace:
-      backend: s3
-      s3:
-        bucket: 'tempo-traces'
-        endpoint: 'loki-minio.observability:9000'
-        insecure: true
+traces:             # enable otlp and http protocol receivers in distributor configuration
+  otlp:
+    grpc:
+      enabled: true
+    http:
+      enabled: true
+minio:              # disable MinIO Helm Chart installation because it is instaled with Loki Helm Chart
+  enabled: false
+metricsGenerator:   # enable metrics generator feature
+  enabled: true
+  remoteWriteUrl: "http://mimir-nginx.observability/api/v1/push"
+  extraArgs:
+  - "-config.expand-env=true"
   extraEnv:
   - name: MINIO_ACCESS_KEY_ID
     valueFrom:
@@ -20,5 +22,85 @@ tempo:
       secretKeyRef:
         name: loki-minio
         key: rootPassword
-  minio:
-    enabled: false
+storage:            # configure storage backend for MinIO which is S3 compatible
+  trace:
+    backend: s3
+    s3:
+      bucket: 'tempo-traces'
+      endpoint: 'loki-minio.observability:9000'
+      insecure: true
+      secret_key: "${MINIO_ACCESS_KEY_SECRET}"
+      access_key: "${MINIO_ACCESS_KEY_ID}"
+distributor:
+  replicas: 1
+  extraArgs:
+  - "-config.expand-env=true"
+  extraEnv:
+  - name: MINIO_ACCESS_KEY_ID
+    valueFrom:
+      secretKeyRef:
+        name: loki-minio
+        key: rootUser
+  - name: MINIO_ACCESS_KEY_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: loki-minio
+        key: rootPassword
+compactor:
+  replicas: 1
+  extraArgs:
+  - "-config.expand-env=true"
+  extraEnv:
+  - name: MINIO_ACCESS_KEY_ID
+    valueFrom:
+      secretKeyRef:
+        name: loki-minio
+        key: rootUser
+  - name: MINIO_ACCESS_KEY_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: loki-minio
+        key: rootPassword
+ingester:
+  extraArgs:
+  - "-config.expand-env=true"
+  extraEnv:
+  - name: MINIO_ACCESS_KEY_ID
+    valueFrom:
+      secretKeyRef:
+        name: loki-minio
+        key: rootUser
+  - name: MINIO_ACCESS_KEY_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: loki-minio
+        key: rootPassword
+querier:
+  replicas: 1
+  extraArgs:
+  - "-config.expand-env=true"
+  extraEnv:
+  - name: MINIO_ACCESS_KEY_ID
+    valueFrom:
+      secretKeyRef:
+        name: loki-minio
+        key: rootUser
+  - name: MINIO_ACCESS_KEY_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: loki-minio
+        key: rootPassword
+queryFrontend:
+  extraArgs:
+    - "-config.expand-env=true"
+  extraEnv:
+  - name: MINIO_ACCESS_KEY_ID
+    valueFrom:
+      secretKeyRef:
+        name: loki-minio
+        key: rootUser
+  - name: MINIO_ACCESS_KEY_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: loki-minio
+        key: rootPassword
