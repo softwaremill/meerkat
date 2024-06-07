@@ -3,6 +3,7 @@ import * as k8s from '@pulumi/kubernetes';
 import * as config from './src/config.js'
 import { HelmRelease } from './src/chart_install.js';
 import { MinioBucket } from './src/create_bucket.js';
+import { Deployment } from '@pulumi/kubernetes/apps/v1/index.js';
 
 const createNamespace = (name) => {
     return new k8s.core.v1.Namespace(name, {
@@ -104,6 +105,8 @@ export default async () => {
         chartValuesPath: "./charts_values/kube_state_metrics_values.yaml",
         chartRepositoryUrl: "https://prometheus-community.github.io/helm-charts"
     });
+
+    new Deployment("petclinic", )
     
     // TODO: further installed chart processing if required
 
