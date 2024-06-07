@@ -106,8 +106,48 @@ export default async () => {
         chartRepositoryUrl: "https://prometheus-community.github.io/helm-charts"
     });
 
-    new Deployment("petclinic", )
-    
+    new k8s.apps.v1.Deployment("petclinic", {
+        metadata: {
+            labels: {
+                app: "petclinic",
+            },
+        },
+        spec: {
+            replicas: 1,
+            selector: {
+                matchLabels: {
+                    app: "petclinic",
+                },
+            },
+            template: {
+                metadata: {
+                    labels: {
+                        app: "petclinic",
+                    },
+                },
+                spec: {
+                    containers: [{
+                        image: "springcommunity/spring-framework-petclinic:6.1.2",
+                        name: "petclinic",
+                        ports: [{
+                            containerPort: 8080,
+                        }],
+                    }],
+                },
+            },
+        },
+    });
+
+    new k8s.core.v1.Service("petclinic", {spec: {
+        ports: [{
+            port: 8080,
+            protocol: "TCP",
+            targetPort: 8080,
+        }],
+        selector: {
+            app: "petclinic",
+        },
+    }})
     // TODO: further installed chart processing if required
 
     // return Pulumi outputs
