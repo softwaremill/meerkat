@@ -8,8 +8,9 @@ making testing and development purposes of observability - friendly.
 
 ## Prerequisites
 
-- Docker installed - standalone Docker or Docker Desktop both work well
-- Pulumi CLI installed
+- [Docker](https://docs.docker.com/get-docker/) installed - standalone Docker or Docker Desktop both work well
+- [Pulumi CLI](https://www.pulumi.com/docs/install/)
+- [Node.js and npm](https://nodejs.org/en/download/package-manager)
 
 ## Running
 
@@ -18,16 +19,17 @@ making testing and development purposes of observability - friendly.
 First you need to run Kubernetes cluster on your localhost. For that we're running Kind cluster
 
 - **Configurations**: Adjust your setup by modifying the `kind-config.yml`.
-- **Scripts**: 
+- **Scripts**:
 Utilize
 
-```bash 
+```bash
 pushd ../try-me/kind
 
 ./cluster_create.sh
 
 popd
-``` 
+```
+
 to set up your Kubernetes cluster and
 
 ```bash
@@ -37,7 +39,8 @@ pushd ../try-me/kind
 
 popd
 
-``` 
+```
+
 to tear it down.
 
 
@@ -50,32 +53,39 @@ Components are deployed as [Helm](https://helm.sh/) Chart managed by Pulumi. Dep
 Inside observability folder.
 
 1. Install libraries. Try-me environment has been prepared using Javascript Pulumi SDK. For those:
+
 ```bash
 
 pushd ../try-me/observability
 npm install
 ```
 
-2. Initialize new Pulumi stack:
+1. Initialize new Pulumi stack:
+
 ```bash
 pulumi stack init localstack --no-select
 ```
-3. Deploy necessary components:
+
+1. Deploy necessary components:
+
 ```bash
 pulumi up localstack
 ```
 
-4. Until now all observability infrastructure are running. We need to auto-instrument the Java application:
+1. Until now all observability infrastructure are running. We need to auto-instrument the Java application:
+
 ```bash
 kubectl patch deployment <your_deployment_name> -n <your_deployment_namespace> -p '{"spec": {"template":{"metadata":{"annotations":{"instrumentation.opentelemetry.io/inject-java":"observability/jvm-autoinstrumentation"}}}} }'
 ```
-5. Get access to Grafana, to get metrics, logs, traces visualized:
+
+1. Get access to Grafana, to get metrics, logs, traces visualized:
+
 ```bash
 kubectl get secret --namespace observability grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo # To retrieve Grafana admin password
 ```
 
 ## Results
-screenshot
 
+screenshot
 
 For more details, visit the repository [here](https://github.com/softwaremill/meerkat/tree/main/try-me).
