@@ -1,7 +1,7 @@
 mimir: 
   structuredConfig:
     common:
-      storage:
+      storage:        # configure storage backend for MinIO which is S3 compatible
         backend: s3
         s3:
           bucket_name: mimir-metrics
@@ -27,7 +27,7 @@ global:
       secretKeyRef:
         name: loki-minio
         key: rootPassword
-minio:
+minio:                # disable MinIO Helm Chart installation because it is instaled with Loki Helm Chart
   enabled: false
 ingester:
   replicas: 1

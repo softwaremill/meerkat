@@ -3,9 +3,6 @@ sidecar:
     enabled: true
   dashboards:
     enabled: true
-grafana.ini:
-  feature_toggles:
-    enable: 'traceToMetrics = true'
 datasources:
   datasources.yaml:
     apiVersion: 1
