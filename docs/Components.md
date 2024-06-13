@@ -14,3 +14,7 @@ TODO: add explanation of why this or not other component
 - [Grafana Mimir](https://grafana.com/oss/mimir/)
 - [Grafana Tempo](https://grafana.com/oss/tempo/)
 - [Prometheus](https://prometheus.io/)
+
+## Petclinic
+
+We're using a modified Spring Petclinic image for demo purposes. We've added a property `logging.pattern.level = trace_id=%mdc{trace_id} span_id=%mdc{span_id} trace_flags=%mdc{trace_flags} %5p` in `src/main/resources/application.properties` file to allow for adding traceid and spanid to logs, which lets Grafana link logs and traces with each other.
