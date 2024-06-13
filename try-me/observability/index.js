@@ -128,7 +128,7 @@ export default async () => {
                 },
                 spec: {
                     containers: [{
-                        image: "springcommunity/spring-framework-petclinic:6.1.2",
+                        image: "softwaremill/spring-petclinic-docker-meerkat:0.0.1",
                         name: "petclinic",
                         ports: [{
                             containerPort: 8080,
