@@ -3,7 +3,6 @@ import * as k8s from '@pulumi/kubernetes';
 import * as config from './src/config.js'
 import { HelmRelease } from './src/chart_install.js';
 import { MinioBucket } from './src/create_bucket.js';
-import { Deployment } from '@pulumi/kubernetes/apps/v1/index.js';
 
 const createNamespace = (name) => {
     return new k8s.core.v1.Namespace(name, {
