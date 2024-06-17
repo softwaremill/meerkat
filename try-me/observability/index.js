@@ -104,7 +104,107 @@ export default async () => {
         chartValuesPath: "./charts_values/kube_state_metrics_values.yaml",
         chartRepositoryUrl: "https://prometheus-community.github.io/helm-charts"
     });
-    
+
+    let applicationProperties = `
+# database init, supports mysql too
+database=h2
+spring.sql.init.schema-locations=classpath*:db/\${database}/schema.sql
+spring.sql.init.data-locations=classpath*:db/\${database}/data.sql
+
+# Web
+spring.thymeleaf.mode=HTML
+
+# JPA
+spring.jpa.hibernate.ddl-auto=none
+spring.jpa.open-in-view=true
+
+# Internationalization
+spring.messages.basename=messages/messages
+
+# Actuator
+management.endpoints.web.exposure.include=*
+
+# Logging
+logging.level.org.springframework=INFO
+logging.pattern.level = trace_id=%mdc{trace_id} span_id=%mdc{span_id} trace_flags=%mdc{trace_flags} %5p
+# logging.level.org.springframework.web=DEBUG
+# logging.level.org.springframework.context.annotation=TRACE
+
+# Maximum time static resources should be cached
+spring.web.resources.cache.cachecontrol.max-age=12h
+    `;
+
+    new k8s.core.v1.ConfigMap("application-properties", {
+        metadata: {
+            name: "application-properties"
+        },
+        data: {
+            "application.properties": applicationProperties
+        }
+    })
+
+    new k8s.apps.v1.Deployment("petclinic", {
+        metadata: {
+            name: "petclinic",
+            labels: {
+                app: "petclinic",
+            },
+        },
+        spec: {
+            replicas: 1,
+            selector: {
+                matchLabels: {
+                    app: "petclinic",
+                },
+            },
+            template: {
+                metadata: {
+                    labels: {
+                        app: "petclinic",
+                    },
+                },
+                spec: {
+                    containers: [{
+                        image: "softwaremill/spring-petclinic:0.0.1",
+                        name: "petclinic",
+                        ports: [{
+                            containerPort: 8080,
+                        }],
+                        volumeMounts: [{
+                            mountPath: "/src/main/resources/",
+                            name: "application-properties"
+                        }],
+                    }],
+                    volumes: [{
+                        name: "application-properties",
+                        configMap: {
+                            name: "application-properties",
+                            items: [{
+                                key: "application.properties",
+                                path: "application.properties"
+                            }],
+                        }
+                    }],
+                },
+            },
+        },
+    });
+
+    new k8s.core.v1.Service("petclinic", {
+        metadata: {
+            name: "petclinic",
+        },
+        spec: {
+            ports: [{
+                port: 8080,
+                protocol: "TCP",
+                targetPort: 8080,
+            }],
+            selector: {
+                app: "petclinic",
+            },
+    }});
+
     // TODO: further installed chart processing if required
 
     // return Pulumi outputs
