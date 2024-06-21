@@ -20,4 +20,4 @@ spec:
       - name: OTEL_TRACES_EXPORTER
         value: otlp
       - name: OTEL_RESOURCE_ATTRIBUTES
-        value: service.name=backend2-service,service.namespace=tutorial-application
+        value: service.name=petclinic,service.namespace=default
