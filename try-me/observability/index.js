@@ -18,13 +18,14 @@ export default async () => {
     const namespace = observabilityNamespace.metadata.name
 
     let certManagerHelmChart;
+    const certManagerChartVersion = "1.15.1";
     if (config.installCertManager) {
         const certManagerCrds = new k8s.yaml.ConfigFile("cert-manager-crds", {
-            file: "https://github.com/cert-manager/cert-manager/releases/download/v1.14.4/cert-manager.crds.yaml",
+            file: `https://github.com/cert-manager/cert-manager/releases/download/v${certManagerChartVersion}/cert-manager.crds.yaml`,
         });
         certManagerHelmChart = new HelmRelease('cert-manager', {
             chartName: 'cert-manager',
-            chartVersion: '1.15.0',
+            chartVersion: certManagerChartVersion,
             chartNamespace: namespace,
             chartValuesPath: './charts_values/cert_manager_values.yaml',
             chartRepositoryUrl: 'https://charts.jetstack.io'
@@ -36,7 +37,7 @@ export default async () => {
     if (config.installOpenTelemetryOperator) {
         otelOperatorHelmChart = new HelmRelease('opentelemetry-operator', {
             chartName: 'opentelemetry-operator',
-            chartVersion: '0.62.0',
+            chartVersion: '0.64.3',
             chartNamespace: namespace,
             chartValuesPath: './charts_values/opentelemetry_operator_values.yaml',
             chartRepositoryUrl: 'https://open-telemetry.github.io/opentelemetry-helm-charts'
@@ -54,7 +55,7 @@ export default async () => {
     if (config.installLoki) {
         lokiHelmChart = new HelmRelease('loki', {
             chartName: 'loki',
-            chartVersion: '6.6.3',
+            chartVersion: '6.7.1',
             chartNamespace: namespace,
             chartValuesPath: './charts_values/loki_values.yaml',
             chartRepositoryUrl: 'https://grafana.github.io/helm-charts'
@@ -65,7 +66,7 @@ export default async () => {
         let bucket = new MinioBucket('tempo-traces', namespace, { dependsOn: lokiHelmChart })
         new HelmRelease('tempo', {
             chartName: 'tempo-distributed',
-            chartVersion: '1.10.0',
+            chartVersion: '1.15.1',
             chartNamespace: namespace,
             chartValuesPath: './charts_values/tempo_values.yaml',
             chartRepositoryUrl: 'https://grafana.github.io/helm-charts',
@@ -80,7 +81,7 @@ export default async () => {
         new MinioBucket('mimir-tsdb', namespace, { dependsOn: lokiHelmChart });
         mimirHelmChart = new HelmRelease("mimir", {
             chartName: "mimir-distributed",
-            chartVersion: "5.3.0",
+            chartVersion: "5.4.0",
             chartNamespace: namespace,
             chartValuesPath: "./charts_values/mimir_values.yaml",
             chartRepositoryUrl: "https://grafana.github.io/helm-charts"
@@ -90,7 +91,7 @@ export default async () => {
     if (config.installGrafana) {
         new HelmRelease("grafana", {
             chartName: "grafana",
-            chartVersion: "8.0.0",
+            chartVersion: "8.3.5",
             chartNamespace: namespace,
             chartValuesPath: "./charts_values/grafana_values.yaml",
             chartRepositoryUrl: "https://grafana.github.io/helm-charts"
@@ -99,7 +100,7 @@ export default async () => {
 
     new HelmRelease("kube-state-metrics", {
         chartName: "kube-state-metrics",
-        chartVersion: "5.19.1",
+        chartVersion: "5.21.0",
         chartNamespace: "kube-system",
         chartValuesPath: "./charts_values/kube_state_metrics_values.yaml",
         chartRepositoryUrl: "https://prometheus-community.github.io/helm-charts"
