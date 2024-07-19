@@ -105,7 +105,7 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 4,
+        "w": 8,
         "x": 0,
         "y": 0
       },
@@ -203,8 +203,8 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 5,
-        "x": 4,
+        "w": 8,
+        "x": 8,
         "y": 0
       },
       "id": 50,
@@ -302,8 +302,8 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 5,
-        "x": 9,
+        "w": 8,
+        "x": 16,
         "y": 0
       },
       "id": 52,
@@ -401,7 +401,7 @@
       },
       "gridPos": {
         "h": 7,
-        "w": 7,
+        "w": 11,
         "x": 0,
         "y": 8
       },
@@ -499,8 +499,8 @@
       },
       "gridPos": {
         "h": 7,
-        "w": 7,
-        "x": 7,
+        "w": 13,
+        "x": 11,
         "y": 8
       },
       "id": 30,
@@ -593,7 +593,7 @@
       },
       "gridPos": {
         "h": 7,
-        "w": 4,
+        "w": 8,
         "x": 0,
         "y": 15
       },
@@ -692,8 +692,8 @@
       },
       "gridPos": {
         "h": 7,
-        "w": 5,
-        "x": 4,
+        "w": 8,
+        "x": 8,
         "y": 15
       },
       "id": 33,
@@ -789,8 +789,8 @@
       },
       "gridPos": {
         "h": 7,
-        "w": 5,
-        "x": 9,
+        "w": 8,
+        "x": 16,
         "y": 15
       },
       "id": 42,
@@ -861,10 +861,10 @@
         "current": {
           "selected": true,
           "text": [
-            "tutorial-application/petclinic"
+            "default/petclinic"
           ],
           "value": [
-            "tutorial-application/petclinic"
+            "default/petclinic"
           ]
         },
         "datasource": {
@@ -897,10 +897,10 @@
         "current": {
           "selected": true,
           "text": [
-            "petclinic-ddf599984-5cxcp"
+            "petclinic-ddf599984-9mdz8"
           ],
           "value": [
-            "petclinic-ddf599984-5cxcp"
+            "petclinic-ddf599984-9mdz8"
           ]
         },
         "datasource": {
@@ -932,7 +932,7 @@
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-24h",
     "to": "now"
   },
   "timeRangeUpdatedDuringEditOrView": false,
