@@ -9,8 +9,6 @@ Meerkat is a ready-to-deploy OpenTelemetry solution for JVM applications, giving
 Learn more about Meerkat in dedicated blog series on SoftwareMill [blog](https://softwaremill.com/blog/?tag=meerkat).
 
 ## Architecture overview
-
-## Architecture overview
 With just a few simple commands, you can set up a [KinD](https://kind.sigs.k8s.io/) (Kubernetes in Docker) cluster and install Meerkat components: 
 - [OpenTelemetry Operator](https://github.com/open-telemetry/opentelemetry-operator), 
 - [Grafana](https://grafana.com/), 
