@@ -6,20 +6,87 @@ Observability Starter Kit for JVM Applications
 
 Meerkat is a ready-to-deploy OpenTelemetry solution for JVM applications, giving you a fully configured observability starting kit with logging, tracing, and metrics in a Kubernetes cluster. Run it locally in a try-me environment.
 
+Learn more about Meerkat in dedicated blog series on SoftwareMill [blog](https://softwaremill.com/blog/?tag=meerkat).
+
 ## Architecture overview
 
-With just a few simple commands, you can set up a [KinD](https://kind.sigs.k8s.io/) (Kubernetes in Docker) cluster and install Meerkat components:
-
-- [OpenTelemetry Operator](https://github.com/open-telemetry/opentelemetry-operator),
-- [Grafana](https://grafana.com/),
-- data backends that process telemetry data (logs, traces and metrics),
+## Architecture overview
+With just a few simple commands, you can set up a [KinD](https://kind.sigs.k8s.io/) (Kubernetes in Docker) cluster and install Meerkat components: 
+- [OpenTelemetry Operator](https://github.com/open-telemetry/opentelemetry-operator), 
+- [Grafana](https://grafana.com/), 
+- data backends that process telemetry data (logs, traces and metrics), 
 - a demo application
 - [MinIO](https://min.io/) buckets which are the object storage for data backends
 
-OpenTelemetry Collector, managed by OpenTelemetry Operator, receives telemetry data from the instrumented demo application and forwards it to data backends: logs to [Loki](https://grafana.com/oss/loki/), traces to [Tempo](https://grafana.com/oss/tempo/) and metrics to [Mimir](https://grafana.com/oss/mimir/). OpenTelemetry Operator injects [auto-instrumentation](https://github.com/open-telemetry/opentelemetry-java-instrumentation) into the demo app, which simplifies the process by automatically collecting and sending telemetry data without manual code modifications. Java Instrumentation captures telemetry data from popular libraries and frameworks. Automatic intrumentation is a great way to start collecting standard metrics. To get specific metrics for your application, implement manual instrumentation.
+OpenTelemetry Collector, managed by OpenTelemetry Operator, receives telemetry data from the instrumented demo application and forwards it to data backends: logs to [Loki](https://grafana.com/oss/loki/), traces to [Tempo](https://grafana.com/oss/tempo/) and metrics to [Mimir](https://grafana.com/oss/mimir/). OpenTelemetry Operator injects auto-instrumentation into the demo app, which simplifies the process by automatically collecting and sending telemetry data without manual code modifications. [Java Instrumentation](https://github.com/open-telemetry/opentelemetry-java-instrumentation) captures telemetry data from popular libraries and frameworks. Automatic intrumentation is a great way to start collecting standard metrics. To get specific metrics for your application, implement manual instrumentation.
 Once the data reaches Loki, Tempo, and Mimir, Grafana is configured to query these data sources directly. Grafana then visualizes the data in its dashboards, allowing you to explore and analyze the telemetry data.
 
-If you only need the OpenTelemetry configuration and already have other backends installed (other than Loki, Mimir, or Tempo) in Kubernetes cluster, you can use Meerkat partially. Learn more here: [link].
+If you only need the OpenTelemetry configuration and already have other backends installed (other than Loki, Mimir, or Tempo) in Kubernetes cluster, you can use Meerkat partially. See the details [here](docs/Kustomize.md).
+
+## Quickstart
+
+For more detailed instuction navigate to articles on SoftwareMill blog: 
+- [installation part 1](https://softwaremill.com/observability-part-2-build-a-local-try-me-environment/)
+- [installation part 2](https://softwaremill.com/observability-part-3-configuring-opentelemetry-components/)
+
+### Prerequisites
+
+- [Docker](https://docs.docker.com/get-docker/) installed - standalone Docker or Docker Desktop both work well
+- [Pulumi CLI](https://www.pulumi.com/docs/install/)
+- [Node.js and npm](https://nodejs.org/en/download/package-manager)
+
+### Installation
+First you need to create Kubernetes cluster on your localhost. For that we're running Kind cluster. Clone the Git repository:
+```
+git clone https://github.com/softwaremill/meerkat.git
+``` 
+Navigate to the meerkat folder:
+```
+cd meerkat
+```
+If needed, adjust the Kind configuration by modifying the try-me/kind/kind-config.yaml file. Run the command to install the cluster:
+```
+try-me/kind/cluster_create.sh
+```
+The `try-me/observability` folder contains Pulumi code to deploy Observability components to the Kubernetes cluster. Components are deployed as [Helm](https://helm.sh/) Charts. Make sure to connect to the correct Kubernetes context. By default, Pulumi will use a local kubeconfig if available. After installing a Kind cluster, it should be your current context.
+Inside the `try-me/observability` folder install libraries. Run:
+```bash
+npm install
+```
+Initialize new Pulumi stack:
+```bash
+pulumi stack init localstack --no-select
+```
+Deploy necessary components:
+
+```bash
+pulumi up localstack
+```
+All components should be running after few minutes. You can check if the demo app is running:
+```bash
+kubectl get pods -l app=petclinic
+```
+Patch the deployment with the annotation to start the automatic instrumentation:
+```
+kubectl patch deployment petclinic -n default -p '{"spec": {"template":{"metadata":{"annotations":{"instrumentation.opentelemetry.io/inject-java":"observability/jvm-autoinstrumentation"}}}} }'
+```
+You can use port-forwarding to access the PetClinic application UI and see how it looks and play with it:
+```bash
+kubectl port-forward services/petclinic 8888:8080
+```
+In your web browser enter http://localhost:8888/ and explore the demo app.
+
+Retrieve password for Grafana:
+```
+kubectl get secret --namespace observability grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+```
+Use port-forwarding to access Grafana:
+```
+kubectl port-forward --namespace observability services/grafana 8000:80
+```
+Open your web browser and enter http://localhost:8000/.
+On the sign-in page, enter admin for the username and paste the password you retrieved from the secret.
+Explore dashboards and other features in Grafana.
 
 ## Why observability?
 
