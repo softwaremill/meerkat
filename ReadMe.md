@@ -2,6 +2,15 @@
 
 Observability Starter Kit for JVM Applications
 
+## Table of contents
+
+1. [Introduction](#introduction)
+1. [Architecture overview](#architecture-overview)
+1. [Quickstart](#quickstart)
+1. [Why observability?](#why-observability)
+1. [Components](#components)
+1. [Copyright](#copyright)
+
 ## Introduction
 
 Meerkat is a ready-to-deploy OpenTelemetry solution for JVM applications, giving you a fully configured observability starting kit with logging, tracing, and metrics in a Kubernetes cluster. Run it locally in a try-me environment.
@@ -9,10 +18,12 @@ Meerkat is a ready-to-deploy OpenTelemetry solution for JVM applications, giving
 Learn more about Meerkat in dedicated blog series on SoftwareMill [blog](https://softwaremill.com/blog/?tag=meerkat).
 
 ## Architecture overview
-With just a few simple commands, you can set up a [KinD](https://kind.sigs.k8s.io/) (Kubernetes in Docker) cluster and install Meerkat components: 
-- [OpenTelemetry Operator](https://github.com/open-telemetry/opentelemetry-operator), 
-- [Grafana](https://grafana.com/), 
-- data backends that process telemetry data (logs, traces and metrics), 
+
+With just a few simple commands, you can set up a [KinD](https://kind.sigs.k8s.io/) (Kubernetes in Docker) cluster and install Meerkat components:
+
+- [OpenTelemetry Operator](https://github.com/open-telemetry/opentelemetry-operator),
+- [Grafana](https://grafana.com/),
+- data backends that process telemetry data (logs, traces and metrics),
 - a demo application
 - [MinIO](https://min.io/) buckets which are the object storage for data backends
 
@@ -23,7 +34,8 @@ If you only need the OpenTelemetry configuration and already have other backends
 
 ## Quickstart
 
-For more detailed instuction navigate to articles on SoftwareMill blog: 
+For more detailed instuction navigate to articles on SoftwareMill blog:
+
 - [installation part 1](https://softwaremill.com/observability-part-2-build-a-local-try-me-environment/)
 - [installation part 2](https://softwaremill.com/observability-part-3-configuring-opentelemetry-components/)
 
@@ -34,55 +46,77 @@ For more detailed instuction navigate to articles on SoftwareMill blog:
 - [Node.js and npm](https://nodejs.org/en/download/package-manager)
 
 ### Installation
+
 First you need to create Kubernetes cluster on your localhost. For that we're running Kind cluster. Clone the Git repository:
-```
+
+```bash
 git clone https://github.com/softwaremill/meerkat.git
-``` 
-Navigate to the meerkat folder:
 ```
+
+Navigate to the meerkat folder:
+
+```bash
 cd meerkat
 ```
+
 If needed, adjust the Kind configuration by modifying the try-me/kind/kind-config.yaml file. Run the command to install the cluster:
-```
+
+```bash
 try-me/kind/cluster_create.sh
 ```
+
 The `try-me/observability` folder contains Pulumi code to deploy Observability components to the Kubernetes cluster. Components are deployed as [Helm](https://helm.sh/) Charts. Make sure to connect to the correct Kubernetes context. By default, Pulumi will use a local kubeconfig if available. After installing a Kind cluster, it should be your current context.
 Inside the `try-me/observability` folder install libraries. Run:
+
 ```bash
 npm install
 ```
+
 Initialize new Pulumi stack:
+
 ```bash
 pulumi stack init localstack --no-select
 ```
+
 Deploy necessary components:
 
 ```bash
 pulumi up localstack
 ```
+
 All components should be running after few minutes. You can check if the demo app is running:
+
 ```bash
 kubectl get pods -l app=petclinic
 ```
+
 Patch the deployment with the annotation to start the automatic instrumentation:
-```
+
+```bash
 kubectl patch deployment petclinic -n default -p '{"spec": {"template":{"metadata":{"annotations":{"instrumentation.opentelemetry.io/inject-java":"observability/jvm-autoinstrumentation"}}}} }'
 ```
+
 You can use port-forwarding to access the PetClinic application UI and see how it looks and play with it:
+
 ```bash
 kubectl port-forward services/petclinic 8888:8080
 ```
-In your web browser enter http://localhost:8888/ and explore the demo app.
+
+In your web browser enter <http://localhost:8888/> and explore the demo app.
 
 Retrieve password for Grafana:
-```
+
+```bash
 kubectl get secret --namespace observability grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 ```
+
 Use port-forwarding to access Grafana:
-```
+
+```bash
 kubectl port-forward --namespace observability services/grafana 8000:80
 ```
-Open your web browser and enter http://localhost:8000/.
+
+Open your web browser and enter <http://localhost:8000/>.
 On the sign-in page, enter admin for the username and paste the password you retrieved from the secret.
 Explore dashboards and other features in Grafana.
 
@@ -124,7 +158,7 @@ Same thing as Loki and Tempo, but for metrics. Mimir is being deployed in distri
 
 ### OpenTelemetry Operator
 
-Operator in Kubernetes ecosystem is an extension which is responsible for easy managing of another application. It utilizes custom resources to describe how the managed application should work and how it should be configured. It's a way to automate processes that can be done by a Kubernetes cluster. We're using OpenTelemetry Operator to automate collector deployment and handle app instrumentation. 
+Operator in Kubernetes ecosystem is an extension which is responsible for easy managing of another application. It utilizes custom resources to describe how the managed application should work and how it should be configured. It's a way to automate processes that can be done by a Kubernetes cluster. We're using OpenTelemetry Operator to automate collector deployment and handle app instrumentation.
 
 ### OpenTelemetry Collector
 
