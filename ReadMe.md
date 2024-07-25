@@ -19,7 +19,7 @@ Learn more about Meerkat in dedicated blog series on SoftwareMill [blog](https:/
 
 ## Architecture overview
 
-![Meerkat Diagram](https://github.com/user-attachments/assets/591ba994-5c10-49a7-831f-bf5889d56a2c)
+![Meerkat diagram](https://github.com/user-attachments/assets/85886cb1-f9d7-4b68-877a-d7ca58a8a8bd)
 
 With just a few simple commands, you can set up a [KinD](https://kind.sigs.k8s.io/) (Kubernetes in Docker) cluster and install Meerkat components:
 
