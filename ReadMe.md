@@ -19,6 +19,8 @@ Learn more about Meerkat in dedicated blog series on SoftwareMill [blog](https:/
 
 ## Architecture overview
 
+![Meerkat Diagram](https://github.com/user-attachments/assets/591ba994-5c10-49a7-831f-bf5889d56a2c)
+
 With just a few simple commands, you can set up a [KinD](https://kind.sigs.k8s.io/) (Kubernetes in Docker) cluster and install Meerkat components:
 
 - [OpenTelemetry Operator](https://github.com/open-telemetry/opentelemetry-operator),
