@@ -24,7 +24,7 @@ With just a few simple commands, you can set up a [KinD](https://kind.sigs.k8s.i
 - [OpenTelemetry Operator](https://github.com/open-telemetry/opentelemetry-operator),
 - [Grafana](https://grafana.com/),
 - data backends that process telemetry data (logs, traces and metrics),
-- a demo application
+- a demo application - [Spring Petclinic](https://github.com/spring-projects/spring-petclinic)
 - [MinIO](https://min.io/) buckets which are the object storage for data backends
 
 ![Meerkat diagram](https://github.com/user-attachments/assets/85886cb1-f9d7-4b68-877a-d7ca58a8a8bd)
