@@ -19,8 +19,6 @@ Learn more about Meerkat in dedicated blog series on SoftwareMill [blog](https:/
 
 ## Architecture overview
 
-![Meerkat diagram](https://github.com/user-attachments/assets/85886cb1-f9d7-4b68-877a-d7ca58a8a8bd)
-
 With just a few simple commands, you can set up a [KinD](https://kind.sigs.k8s.io/) (Kubernetes in Docker) cluster and install Meerkat components:
 
 - [OpenTelemetry Operator](https://github.com/open-telemetry/opentelemetry-operator),
@@ -28,6 +26,8 @@ With just a few simple commands, you can set up a [KinD](https://kind.sigs.k8s.i
 - data backends that process telemetry data (logs, traces and metrics),
 - a demo application
 - [MinIO](https://min.io/) buckets which are the object storage for data backends
+
+![Meerkat diagram](https://github.com/user-attachments/assets/85886cb1-f9d7-4b68-877a-d7ca58a8a8bd)
 
 OpenTelemetry Collector, managed by OpenTelemetry Operator, receives telemetry data from the instrumented demo application and forwards it to data backends: logs to [Loki](https://grafana.com/oss/loki/), traces to [Tempo](https://grafana.com/oss/tempo/) and metrics to [Mimir](https://grafana.com/oss/mimir/). OpenTelemetry Operator injects auto-instrumentation into the demo app, which simplifies the process by automatically collecting and sending telemetry data without manual code modifications. [Java Instrumentation](https://github.com/open-telemetry/opentelemetry-java-instrumentation) captures telemetry data from popular libraries and frameworks. Automatic intrumentation is a great way to start collecting standard metrics. To get specific metrics for your application, implement manual instrumentation.
 Once the data reaches Loki, Tempo, and Mimir, Grafana is configured to query these data sources directly. Grafana then visualizes the data in its dashboards, allowing you to explore and analyze the telemetry data.
