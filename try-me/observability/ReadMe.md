@@ -1,6 +1,6 @@
-## Configuration steps
+# Configuration steps
 
-Inside `observabilty` folder. 
+Inside `observability` folder.
 
 1. `pulumi login --local`
 2. `pulumi stack init localstack`
