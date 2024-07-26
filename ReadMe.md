@@ -13,13 +13,15 @@ Observability Starter Kit for JVM Applications
 
 ## Introduction
 
-Meerkat is a ready-to-deploy OpenTelemetry solution for JVM applications, giving you a fully configured observability starting kit with logging, tracing, and metrics in a Kubernetes cluster. Run it locally in a try-me environment.
+Meerkat is a ready-to-deploy set of services for JVM applications utilizing OpenTelemetry, giving you a fully configured observability starting kit with logging, tracing, and metrics in a Kubernetes cluster. Install the components in your Kubernetes cluster, or first, give it a try in a localhost try-me enviroment with [KinD](https://kind.sigs.k8s.io/) (Kubernetes in Docker).
+
+This starter kit is intended for Developers and DevOps professionals who wish to implement observability into their JVM-based applications using Kubernetes.
 
 Learn more about Meerkat in dedicated blog series on SoftwareMill [blog](https://softwaremill.com/blog/?tag=meerkat).
 
 ## Architecture overview
 
-With just a few simple commands, you can set up a [KinD](https://kind.sigs.k8s.io/) (Kubernetes in Docker) cluster and install Meerkat components:
+With just a few simple commands install Meerkat components in a Kubernetes cluster:
 
 - [OpenTelemetry Operator](https://github.com/open-telemetry/opentelemetry-operator),
 - [Grafana](https://grafana.com/),
@@ -48,8 +50,7 @@ For more detailed instuction navigate to articles on SoftwareMill blog:
 - [Node.js and npm](https://nodejs.org/en/download/package-manager)
 
 ### Installation
-
-First you need to create Kubernetes cluster on your localhost. For that we're running Kind cluster. Clone the Git repository:
+Clone the Git repository:
 
 ```bash
 git clone https://github.com/softwaremill/meerkat.git
@@ -60,14 +61,17 @@ Navigate to the meerkat folder:
 ```bash
 cd meerkat
 ```
+You can install the setup in your existing Kubernetes cluster or in a test cluster managed by [KinD](https://kind.sigs.k8s.io/) on your localhost environment. 
+If you already have a Kubernetes cluster, move to the [Deploy the compontens](#deploy-the-components) section and skip the KinD cluster creation. 
 
-If needed, adjust the Kind configuration by modifying the try-me/kind/kind-config.yaml file. Run the command to install the cluster:
+#### Create KinD cluster
+First you need to create Kubernetes cluster on your localhost. For that we're running Kind cluster. If needed, adjust the Kind configuration by modifying the `try-me/kind/kind-config.yaml` file. Run the command to install the cluster:
 
 ```bash
 try-me/kind/cluster_create.sh
 ```
-
-The `try-me/observability` folder contains Pulumi code to deploy Observability components to the Kubernetes cluster. Components are deployed as [Helm](https://helm.sh/) Charts. Make sure to connect to the correct Kubernetes context. By default, Pulumi will use a local kubeconfig if available. After installing a Kind cluster, it should be your current context.
+#### Deploy the components 
+The `try-me/observability` folder contains Pulumi code to deploy Observability components to the Kubernetes cluster. Components are deployed as [Helm](https://helm.sh/) Charts. Make sure to connect to the correct Kubernetes context. By default, Pulumi will use a local kubeconfig if available. If you have just installed a Kind cluster, it should be your current context.
 Inside the `try-me/observability` folder install libraries. Run:
 
 ```bash
