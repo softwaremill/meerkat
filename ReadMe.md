@@ -134,7 +134,7 @@ With observability, you can gain full insight and visibility into your applicati
 
 We're using Kustomize to compose a list of manifests we install with one command. These manifests are required by OpenTelemetry Operator and OpenTelemetry Collector. Kustomize is supported by many tools like kubectl, Terraform, Pulumi, FluxCD, ArgoCD etc., which made us choose this tool.
 
-Pulumi, besides installing data backends (more about this later), is also responsible for installing these required manifests in our localhost installation.
+Pulumi, besides installing data backends (more about this later), is also responsible for installing these required manifests in our installation.
 
 We'll now briefly describe components used in Meerkat.
 
