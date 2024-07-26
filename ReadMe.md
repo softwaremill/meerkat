@@ -13,11 +13,11 @@ Observability Starter Kit for JVM Applications
 
 ## Introduction
 
-Meerkat is a ready-to-deploy set of services for JVM applications utilizing OpenTelemetry, giving you a fully configured observability starting kit with logging, tracing, and metrics in a Kubernetes cluster. Install the components in your Kubernetes cluster, or first, give it a try in a localhost try-me enviroment with [KinD](https://kind.sigs.k8s.io/) (Kubernetes in Docker).
+Meerkat is a ready-to-deploy set of services for JVM applications utilizing OpenTelemetry, giving you a fully configured observability starting kit with logging, tracing, and metrics in a Kubernetes cluster. Install the components in your Kubernetes cluster, or first, give it a try in a localhost try-me environment with [KinD](https://kind.sigs.k8s.io/) (Kubernetes in Docker).
 
-This starter kit is intended for Developers and DevOps professionals who wish to implement observability into their JVM-based applications using Kubernetes.
+This starter kit is intended for developers and DevOps professionals who wish to implement observability in their JVM-based applications using Kubernetes.
 
-Learn more about Meerkat in dedicated blog series on SoftwareMill [blog](https://softwaremill.com/blog/?tag=meerkat).
+Learn more about Meerkat in a dedicated blog series on SoftwareMill [blog](https://softwaremill.com/blog/?tag=meerkat).
 
 ## Architecture overview
 
@@ -25,20 +25,20 @@ With just a few simple commands install Meerkat components in a Kubernetes clust
 
 - [OpenTelemetry Operator](https://github.com/open-telemetry/opentelemetry-operator),
 - [Grafana](https://grafana.com/),
-- data backends that process telemetry data (logs, traces and metrics),
+- data backends that process telemetry data (logs, traces, and metrics),
 - a demo application - [Spring Petclinic](https://github.com/spring-projects/spring-petclinic)
 - [MinIO](https://min.io/) buckets which are the object storage for data backends
 
 ![Meerkat diagram](https://github.com/user-attachments/assets/85886cb1-f9d7-4b68-877a-d7ca58a8a8bd)
 
-OpenTelemetry Collector, managed by OpenTelemetry Operator, receives telemetry data from the instrumented demo application and forwards it to data backends: logs to [Loki](https://grafana.com/oss/loki/), traces to [Tempo](https://grafana.com/oss/tempo/) and metrics to [Mimir](https://grafana.com/oss/mimir/). OpenTelemetry Operator injects auto-instrumentation into the demo app, which simplifies the process by automatically collecting and sending telemetry data without manual code modifications. [Java Instrumentation](https://github.com/open-telemetry/opentelemetry-java-instrumentation) captures telemetry data from popular libraries and frameworks. Automatic intrumentation is a great way to start collecting standard metrics. To get specific metrics for your application, implement manual instrumentation.
+OpenTelemetry Collector, managed by OpenTelemetry Operator, receives telemetry data from the instrumented demo application and forwards it to data backends: logs to [Loki](https://grafana.com/oss/loki/), traces to [Tempo](https://grafana.com/oss/tempo/) and metrics to [Mimir](https://grafana.com/oss/mimir/). OpenTelemetry Operator injects auto-instrumentation into the demo app, simplifying the process by automatically collecting and sending telemetry data without manual code modifications. [Java Instrumentation](https://github.com/open-telemetry/opentelemetry-java-instrumentation) captures telemetry data from popular libraries and frameworks. Automatic instrumentation is a great way to start collecting standard metrics. To get specific metrics for your application, implement manual instrumentation.
 Once the data reaches Loki, Tempo, and Mimir, Grafana is configured to query these data sources directly. Grafana then visualizes the data in its dashboards, allowing you to explore and analyze the telemetry data.
 
-If you only need the OpenTelemetry configuration and already have other backends installed (other than Loki, Mimir, or Tempo) in Kubernetes cluster, you can use Meerkat partially. See the details [here](docs/Kustomize.md).
+If you only need the OpenTelemetry configuration and already have other backends installed (other than Loki, Mimir, or Tempo) in the Kubernetes cluster, you can use Meerkat partially. See the details [here](docs/Kustomize.md).
 
 ## Quickstart
 
-For more detailed instuction navigate to articles on SoftwareMill blog:
+For more detailed instructions navigate to articles on the SoftwareMill blog:
 
 - [installation part 1](https://softwaremill.com/observability-part-2-build-a-local-try-me-environment/)
 - [installation part 2](https://softwaremill.com/observability-part-3-configuring-opentelemetry-components/)
@@ -63,12 +63,12 @@ Navigate to the meerkat folder:
 cd meerkat
 ```
 
-You can install the setup in your existing Kubernetes cluster or in a test cluster managed by [KinD](https://kind.sigs.k8s.io/) on your localhost environment.
+You can install the setup in your existing Kubernetes cluster or a test cluster managed by [KinD](https://kind.sigs.k8s.io/) on your localhost environment.
 If you already have a Kubernetes cluster, move to the [Deploy the components](#deploy-the-components) section and skip the KinD cluster creation.
 
 #### Create KinD cluster
 
-First you need to create Kubernetes cluster on your localhost. For that we're running Kind cluster. If needed, adjust the Kind configuration by modifying the `try-me/kind/kind-config.yaml` file. Run the command to install the cluster:
+First, you need to create a Kubernetes cluster on your localhost. For that, we're running a KinD cluster. If required, adjust the Kind configuration by modifying the `try-me/kind/kind-config.yaml` file. Run the command to install the cluster:
 
 ```bash
 try-me/kind/cluster_create.sh
@@ -95,7 +95,7 @@ Deploy necessary components:
 pulumi up localstack
 ```
 
-All components should be running after few minutes. You can check if the demo app is running:
+All components should be running after a few minutes. You can check if the demo app is running:
 
 ```bash
 kubectl get pods -l app=petclinic
@@ -137,11 +137,11 @@ With observability, you can gain full insight and visibility into your applicati
 
 ## Components
 
-We're using Kustomize to compose a list of manifests we install with one command. These manifests are required by OpenTelemetry Operator and OpenTelemetry Collector. Kustomize is supported by many tools like kubectl, Terraform, Pulumi, FluxCD, ArgoCD etc., which made us choose this tool.
+We're using Kustomize to compose a list of manifests we install with one command. These manifests are required by the OpenTelemetry Operator and OpenTelemetry Collector. Kustomize is supported by many tools like kubectl, Terraform, Pulumi, FluxCD, ArgoCD, etc., which made us choose this tool.
 
 Pulumi, besides installing data backends (more about this later), is also responsible for installing these required manifests in our installation.
 
-We'll now briefly describe components used in Meerkat.
+We'll now briefly describe the components used in Meerkat.
 
 ### Pulumi
 
@@ -149,15 +149,15 @@ Pulumi is an infrastructure-as-code tool. By using a general-purpose programming
 
 ### Kustomize
 
-Kustomize is a tool that lets you customize configuration and simplifies its deployment. You can use it to create base templates and patches that modify only portions of them that differ between installations. In Meerkat, we use it to a very basic degree - to organize manifests into one kustomization and generate configMaps for Grafana dashboards.
+Kustomize is a tool that lets you customize the configuration and simplifies its deployment. You can use it to create base templates and patches that modify only portions that differ between installations. In Meerkat, we use it to a very basic degree - to organize manifests into one kustomization and generate configMaps for Grafana dashboards.
 
 ### Grafana
 
-It's our open-source tool of choice for data visualization. Grafana uses telemetry data backends (Loki, Tempo, and Mimir) to create dashboards with graphs and tables. It also allows for easy data searching using LogQL, TraceQL and PromQL.
+It's our open-source tool of choice for data visualization. Grafana uses telemetry data backends (Loki, Tempo, and Mimir) to create dashboards with graphs and tables. It also allows for easy data searching using LogQL, TraceQL, and PromQL.
 
 ### Loki
 
-Loki is a data backend for logs. It uses object storage for keeping data long-term. Any S3-compatible buckets can be used for that, in Meerkat we're using MinIO to keep everything hosted locally. Loki is being deployed using simple scalable mode, which allows for scaling out individual pods if necessary.
+Loki is a data backend for logs. It uses object storage for keeping data long-term. Any S3-compatible buckets can be used for that, in Meerkat we're using MinIO to keep everything hosted locally. Loki is being deployed using the simple scalable mode, which allows for scaling out individual pods if necessary.
 
 ### Tempo
 
@@ -169,11 +169,11 @@ Same thing as Loki and Tempo, but for metrics. Mimir is being deployed in distri
 
 ### OpenTelemetry Operator
 
-Operator in Kubernetes ecosystem is an extension which is responsible for easy managing of another application. It utilizes custom resources to describe how the managed application should work and how it should be configured. It's a way to automate processes that can be done by a Kubernetes cluster. We're using OpenTelemetry Operator to automate collector deployment and handle app instrumentation.
+The operator in the Kubernetes ecosystem is an extension that is responsible for the easy management of another application. It utilizes custom resources to describe how the managed application should work and how it should be configured. It's a way to automate processes that can be done by a Kubernetes cluster. We're using OpenTelemetry Operator to automate collector deployment and handle app instrumentation.
 
 ### OpenTelemetry Collector
 
-Everything is being powered by OpenTelemetry Collector. It's responsible for collecting, processing and exporting the data to proper data backends. In Meerkat, we deploy it as a daemonset, which allows us to not only receive application data, but also scrape nodes for resource utilization etc.
+Everything is being powered by OpenTelemetry Collector. It's responsible for collecting, processing, and exporting the data to proper data backends. In Meerkat, we deploy it as a daemonset, which allows us to not only receive application data but also scrape nodes for resource utilization, etc.
 
 ## Copyright
 
