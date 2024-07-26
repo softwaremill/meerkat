@@ -145,35 +145,35 @@ We'll now briefly describe the components used in Meerkat.
 
 ### Pulumi
 
-Pulumi is an infrastructure-as-code tool. By using a general-purpose programming language you can declare what you want to deploy and apply this declaration by running the app.
+[Pulumi](https://www.pulumi.com/docs/get-started/) is an infrastructure-as-code tool. By using a general-purpose programming language you can declare what you want to deploy and apply this declaration by running the app.
 
 ### Kustomize
 
-Kustomize is a tool that lets you customize the configuration and simplifies its deployment. You can use it to create base templates and patches that modify only portions that differ between installations. In Meerkat, we use it to a very basic degree - to organize manifests into one kustomization and generate configMaps for Grafana dashboards.
+[Kustomize](https://kustomize.io) is a tool that lets you customize the configuration and simplifies its deployment. You can use it to create base templates and patches that modify only portions that differ between installations. In Meerkat, we use it to a very basic degree - to organize manifests into one kustomization and generate configMaps for Grafana dashboards.
 
 ### Grafana
 
-It's our open-source tool of choice for data visualization. Grafana uses telemetry data backends (Loki, Tempo, and Mimir) to create dashboards with graphs and tables. It also allows for easy data searching using LogQL, TraceQL, and PromQL.
+It's our open-source tool of choice for data visualization. [Grafana](https://grafana.com) uses telemetry data backends (Loki, Tempo, and Mimir) to create dashboards with graphs and tables. It also allows for easy data searching using LogQL, TraceQL, and PromQL.
 
 ### Loki
 
-Loki is a data backend for logs. It uses object storage for keeping data long-term. Any S3-compatible buckets can be used for that, in Meerkat we're using MinIO to keep everything hosted locally. Loki is being deployed using the simple scalable mode, which allows for scaling out individual pods if necessary.
+[Loki](https://grafana.com/docs/loki/latest/) is a data backend for logs. It uses object storage for keeping data long-term. Any S3-compatible buckets can be used for that, in Meerkat we're using MinIO to keep everything hosted locally. Loki is being deployed using the simple scalable mode, which allows for scaling out individual pods if necessary.
 
 ### Tempo
 
-It's a backend for traces, it also stores data cheaply in object storage. Made by Grafana, it is easy to set up to work with Grafana, Loki, and Mimir. Tempo is being deployed using distributed mode, which allows for scaling every Tempo microservice separately.
+It's a backend for traces, it also stores data cheaply in object storage. Made by Grafana, it is easy to set up to work with Grafana, Loki, and Mimir. [Tempo](https://grafana.com/docs/tempo/latest/) is being deployed using distributed mode, which allows for scaling every Tempo microservice separately.
 
 ### Mimir
 
-Same thing as Loki and Tempo, but for metrics. Mimir is being deployed in distributed mode.
+Same thing as Loki and Tempo, but for metrics. [Mimir](https://grafana.com/docs/mimir/latest/) is being deployed in distributed mode.
 
 ### OpenTelemetry Operator
 
-The operator in the Kubernetes ecosystem is an extension that is responsible for the easy management of another application. It utilizes custom resources to describe how the managed application should work and how it should be configured. It's a way to automate processes that can be done by a Kubernetes cluster. We're using OpenTelemetry Operator to automate collector deployment and handle app instrumentation.
+[The operator](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/) in the Kubernetes ecosystem is an extension that is responsible for the easy management of another application. It utilizes custom resources to describe how the managed application should work and how it should be configured. It's a way to automate processes that can be done by a Kubernetes cluster. We're using [OpenTelemetry Operator](https://opentelemetry.io/docs/kubernetes/operator/) to automate collector deployment and handle app instrumentation.
 
 ### OpenTelemetry Collector
 
-Everything is being powered by OpenTelemetry Collector. It's responsible for collecting, processing, and exporting the data to proper data backends. In Meerkat, we deploy it as a daemonset, which allows us to not only receive application data but also scrape nodes for resource utilization, etc.
+Everything is being powered by [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/). It's responsible for collecting, processing, and exporting the data to proper data backends. In Meerkat, we deploy it as a daemonset, which allows us to not only receive application data but also scrape nodes for resource utilization, etc.
 
 ## Copyright
 
