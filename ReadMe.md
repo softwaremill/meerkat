@@ -29,7 +29,7 @@ With just a few simple commands install Meerkat components in a Kubernetes clust
 - a demo application - [Spring Petclinic](https://github.com/spring-projects/spring-petclinic)
 - [MinIO](https://min.io/) buckets which are the object storage for data backends
 
-![Meerkat diagram](https://github.com/user-attachments/assets/85886cb1-f9d7-4b68-877a-d7ca58a8a8bd)
+![Meerkat diagram](https://github.com/user-attachments/assets/6ae26db3-46ad-46cc-9760-9c599a0b34e5)
 
 OpenTelemetry Collector, managed by OpenTelemetry Operator, receives telemetry data from the instrumented demo application and forwards it to data backends: logs to [Loki](https://grafana.com/oss/loki/), traces to [Tempo](https://grafana.com/oss/tempo/) and metrics to [Mimir](https://grafana.com/oss/mimir/). OpenTelemetry Operator injects auto-instrumentation into the demo app, simplifying the process by automatically collecting and sending telemetry data without manual code modifications. [Java Instrumentation](https://github.com/open-telemetry/opentelemetry-java-instrumentation) captures telemetry data from popular libraries and frameworks. Automatic instrumentation is a great way to start collecting standard metrics. To get specific metrics for your application, implement manual instrumentation.
 Once the data reaches Loki, Tempo, and Mimir, Grafana is configured to query these data sources directly. Grafana then visualizes the data in its dashboards, allowing you to explore and analyze the telemetry data.
