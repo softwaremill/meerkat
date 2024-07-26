@@ -1,6 +1,6 @@
 # Kustomize installation
 
-If you have a Kubernetes cluster already, you can only install our configuration with [Kustomize](https://kustomize.io/#overview) and [Helm](https://helm.sh/). Apart from your application already deployed, you will need to [deploy OpenTelemetry Operator](https://opentelemetry.io/docs/kubernetes/operator/) and [cert-manager](https://cert-manager.io/).
+If you don't need the data backends, Grafana or demo application, you can install only the configuration related to the OpenTelemetry with [Kustomize](https://kustomize.io/#overview) and [Helm](https://helm.sh/). Apart from your application already deployed, you will need to [deploy OpenTelemetry Operator](https://opentelemetry.io/docs/kubernetes/operator/) and [cert-manager](https://cert-manager.io/).
 
 To install cert-manager run:
 
