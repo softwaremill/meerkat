@@ -50,6 +50,7 @@ For more detailed instuction navigate to articles on SoftwareMill blog:
 - [Node.js and npm](https://nodejs.org/en/download/package-manager)
 
 ### Installation
+
 Clone the Git repository:
 
 ```bash
@@ -61,16 +62,20 @@ Navigate to the meerkat folder:
 ```bash
 cd meerkat
 ```
-You can install the setup in your existing Kubernetes cluster or in a test cluster managed by [KinD](https://kind.sigs.k8s.io/) on your localhost environment. 
-If you already have a Kubernetes cluster, move to the [Deploy the compontens](#deploy-the-components) section and skip the KinD cluster creation. 
+
+You can install the setup in your existing Kubernetes cluster or in a test cluster managed by [KinD](https://kind.sigs.k8s.io/) on your localhost environment.
+If you already have a Kubernetes cluster, move to the [Deploy the components](#deploy-the-components) section and skip the KinD cluster creation.
 
 #### Create KinD cluster
+
 First you need to create Kubernetes cluster on your localhost. For that we're running Kind cluster. If needed, adjust the Kind configuration by modifying the `try-me/kind/kind-config.yaml` file. Run the command to install the cluster:
 
 ```bash
 try-me/kind/cluster_create.sh
 ```
-#### Deploy the components 
+
+#### Deploy the components
+
 The `try-me/observability` folder contains Pulumi code to deploy Observability components to the Kubernetes cluster. Components are deployed as [Helm](https://helm.sh/) Charts. Make sure to connect to the correct Kubernetes context. By default, Pulumi will use a local kubeconfig if available. If you have just installed a Kind cluster, it should be your current context.
 Inside the `try-me/observability` folder install libraries. Run:
 
