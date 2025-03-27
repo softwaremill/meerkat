@@ -66,7 +66,7 @@ export default async () => {
         let bucket = new MinioBucket('tempo-traces', namespace, { dependsOn: lokiHelmChart })
         new HelmRelease('tempo', {
             chartName: 'tempo-distributed',
-            chartVersion: '1.15.1',
+            chartVersion: '1.33.0',
             chartNamespace: namespace,
             chartValuesPath: './charts_values/tempo_values.yaml',
             chartRepositoryUrl: 'https://grafana.github.io/helm-charts',
