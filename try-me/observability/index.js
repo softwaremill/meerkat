@@ -100,7 +100,7 @@ export default async () => {
 
     new HelmRelease("kube-state-metrics", {
         chartName: "kube-state-metrics",
-        chartVersion: "5.21.0",
+        chartVersion: "5.31.0",
         chartNamespace: "kube-system",
         chartValuesPath: "./charts_values/kube_state_metrics_values.yaml",
         chartRepositoryUrl: "https://prometheus-community.github.io/helm-charts"
