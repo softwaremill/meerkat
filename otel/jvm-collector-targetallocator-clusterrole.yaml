@@ -10,6 +10,7 @@ rules:
   - services
   - endpoints
   - pods
+  - namespaces
   verbs: ["get", "list", "watch"]
 - apiGroups: [""]
   resources:
@@ -24,6 +25,14 @@ rules:
   - networking.k8s.io
   resources:
   - ingresses
+  verbs: ["get", "list", "watch"]
+- apiGroups:
+  - monitoring.coreos.com
+  resources: ["*"]
+  # - servicemonitors
+  # - podmonitors
+  # - probes
+  # - scrapeconfigs
   verbs: ["get", "list", "watch"]
 - nonResourceURLs: ["/metrics"]
   verbs: ["get"]
