@@ -55,7 +55,7 @@ export default async () => {
     if (config.installLoki) {
         lokiHelmChart = new HelmRelease('loki', {
             chartName: 'loki',
-            chartVersion: '6.7.1',
+            chartVersion: '6.29.0',
             chartNamespace: namespace,
             chartValuesPath: './charts_values/loki_values.yaml',
             chartRepositoryUrl: 'https://grafana.github.io/helm-charts'
