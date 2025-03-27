@@ -18,7 +18,7 @@ export default async () => {
     const namespace = observabilityNamespace.metadata.name
 
     let certManagerHelmChart;
-    const certManagerChartVersion = "1.15.1";
+    const certManagerChartVersion = "1.17.1";
     if (config.installCertManager) {
         const certManagerCrds = new k8s.yaml.ConfigFile("cert-manager-crds", {
             file: `https://github.com/cert-manager/cert-manager/releases/download/v${certManagerChartVersion}/cert-manager.crds.yaml`,
