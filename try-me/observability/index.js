@@ -81,7 +81,7 @@ export default async () => {
         new MinioBucket('mimir-tsdb', namespace, { dependsOn: lokiHelmChart });
         mimirHelmChart = new HelmRelease("mimir", {
             chartName: "mimir-distributed",
-            chartVersion: "5.4.0",
+            chartVersion: "5.6.0",
             chartNamespace: namespace,
             chartValuesPath: "./charts_values/mimir_values.yaml",
             chartRepositoryUrl: "https://grafana.github.io/helm-charts"
