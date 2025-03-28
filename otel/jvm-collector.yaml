@@ -33,6 +33,7 @@ spec:
         logs:
           level: WARN
       extensions: [health_check, pprof, zpages]
+      # extensions: [pprof, zpages]
       pipelines:
         logs:
           receivers: [otlp]
@@ -55,7 +56,8 @@ spec:
       zpages:
         endpoint: :55679
       pprof: {}
-      health_check: {}
+      health_check:
+        endpoint: "0.0.0.0:13133"
 
     exporters:
       debug:

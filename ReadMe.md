@@ -177,4 +177,4 @@ Everything is being powered by [OpenTelemetry Collector](https://opentelemetry.i
 
 ## Copyright
 
-Copyright (C) 2024 SoftwareMill [https://softwaremill.com](https://softwaremill.com).
+Copyright (C) 2025 SoftwareMill [https://softwaremill.com](https://softwaremill.com).

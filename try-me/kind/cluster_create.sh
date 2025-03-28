@@ -22,7 +22,7 @@ fi
 
 kind create cluster \
   --name "$CLUSTER_NAME" \
-  --image "kindest/node:v1.29.2" \
+  --image "kindest/node:v1.32.3" \
   --config "$KIND_CONFIG_FILE" \
   --wait 30s \
   --retain
