@@ -86,31 +86,32 @@ npm install
 Initialize new Pulumi stack:
 
 ```bash
-pulumi stack init localstack --no-select
+pulumi stack init localstack
 ```
 
 Deploy necessary components:
 
 ```bash
-pulumi up localstack
+pulumi up
 ```
 
-All components should be running after a few minutes. You can check if the demo app is running:
+All components should be running after a few minutes. You can check if everything is up and running by issuing the following commands:
 
 ```bash
-kubectl get pods -l app=petclinic
+kubectl get pods -n petclinic
+kubectl get pods -n observability
 ```
 
 Patch the deployment with the annotation to start the automatic instrumentation:
 
 ```bash
-kubectl patch deployment petclinic -n default -p '{"spec": {"template":{"metadata":{"annotations":{"instrumentation.opentelemetry.io/inject-java":"observability/jvm-autoinstrumentation"}}}} }'
+kubectl patch deployment petclinic -n petclinic -p '{"spec": {"template":{"metadata":{"annotations":{"instrumentation.opentelemetry.io/inject-java":"observability/jvm-autoinstrumentation"}}}} }'
 ```
 
 You can use port-forwarding to access the PetClinic application UI and see how it looks and play with it:
 
 ```bash
-kubectl port-forward services/petclinic 8888:8080
+kubectl port-forward -n petclinic services/petclinic 8888:8080
 ```
 
 In your web browser enter <http://localhost:8888/> and explore the demo app.
@@ -118,7 +119,7 @@ In your web browser enter <http://localhost:8888/> and explore the demo app.
 Retrieve password for Grafana:
 
 ```bash
-kubectl get secret --namespace observability grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+kubectl get secret -n observability grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 ```
 
 Use port-forwarding to access Grafana:

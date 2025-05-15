@@ -17,6 +17,9 @@ export default async () => {
     const observabilityNamespace = createNamespace('observability');
     const namespace = observabilityNamespace.metadata.name
 
+    const petclinicNamespace = createNamespace('petclinic');
+    const petclinicNamespaceName = petclinicNamespace.metadata.name
+
     let certManagerHelmChart;
     const certManagerChartVersion = "1.17.1";
     if (config.installCertManager) {
@@ -137,7 +140,8 @@ spring.web.resources.cache.cachecontrol.max-age=12h
 
     new k8s.core.v1.ConfigMap("application-properties", {
         metadata: {
-            name: "application-properties"
+            name: "application-properties",
+            namespace: petclinicNamespaceName,
         },
         data: {
             "application.properties": applicationProperties
@@ -150,6 +154,7 @@ spring.web.resources.cache.cachecontrol.max-age=12h
             labels: {
                 app: "petclinic",
             },
+            namespace: petclinicNamespaceName,
         },
         spec: {
             replicas: 1,
@@ -166,7 +171,7 @@ spring.web.resources.cache.cachecontrol.max-age=12h
                 },
                 spec: {
                     containers: [{
-                        image: "softwaremill/spring-petclinic:0.0.1",
+                        image: "softwaremill/spring-petclinic:2025-05-15-3a93108",
                         name: "petclinic",
                         ports: [{
                             containerPort: 8080,
@@ -194,6 +199,7 @@ spring.web.resources.cache.cachecontrol.max-age=12h
     new k8s.core.v1.Service("petclinic", {
         metadata: {
             name: "petclinic",
+            namespace: petclinicNamespaceName,
         },
         spec: {
             ports: [{
