@@ -4,7 +4,7 @@
     "version": "",
     "type": "module",
     "dependencies": {
-        "@pulumi/pulumi": "^3.0.0",
+        "@pulumi/pulumi": "^3.217.1",
         "@pulumi/kubernetes": "^4.0.0"
     },
     "engines": {
